@@ -1,10 +1,22 @@
-import { App, Construct, Stack, StackProps } from '@aws-cdk/core';
+import * as path from 'path';
+import * as s3 from '@aws-cdk/aws-s3';
+import * as s3deploy from '@aws-cdk/aws-s3-deployment';
+import { App, Construct, RemovalPolicy, Stack, StackProps } from '@aws-cdk/core';
 
 export class MyStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps = {}) {
     super(scope, id, props);
 
-    // define resources here...
+    const destinationBucket = new s3.Bucket(this, 'Bucket', {
+      removalPolicy: RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
+    });
+
+    new s3deploy.BucketDeployment(this, 'BucketDeployment', {
+      sources: [s3deploy.Source.asset(path.join(__dirname, 'books'))],
+      destinationBucket,
+      prune: true,
+    });
   }
 }
 
@@ -16,7 +28,6 @@ const devEnv = {
 
 const app = new App();
 
-new MyStack(app, 'my-stack-dev', { env: devEnv });
-// new MyStack(app, 'my-stack-prod', { env: prodEnv });
+new MyStack(app, 'bibleverse-stack', { env: devEnv });
 
 app.synth();
