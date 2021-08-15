@@ -25,7 +25,7 @@ public class BibleVerseStack extends Stack {
 				new BucketProps.Builder().removalPolicy(RemovalPolicy.DESTROY).autoDeleteObjects(true).build());
 
 		List<ISource> sources = new ArrayList<>(1);
-		sources.add(Source.asset("./data"));
+		sources.add(Source.asset("../data"));
 
 		BucketDeployment bucketDeployment = new BucketDeployment(this, "BucketDeployment",
 				new BucketDeploymentProps.Builder().sources(sources).destinationBucket(bucket).build());
