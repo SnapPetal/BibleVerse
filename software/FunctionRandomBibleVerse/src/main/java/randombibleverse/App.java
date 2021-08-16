@@ -1,4 +1,4 @@
-package helloworld;
+package randombibleverse;
 
 import java.io.BufferedReader;
 import java.io.IOException;

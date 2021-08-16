@@ -58,7 +58,6 @@ public class BibleVerseStack extends Stack {
                 .command(functionRandomBibleVersePackagingInstructions)
                 .image(Runtime.JAVA_11.getBundlingImage())
                 .volumes(singletonList(
-                        // Mount local .m2 repo to avoid download all the dependencies again inside the container
                         DockerVolume.builder()
                                 .hostPath(System.getProperty("user.home") + "/.m2/")
                                 .containerPath("/root/.m2/")
@@ -73,7 +72,7 @@ public class BibleVerseStack extends Stack {
                         AssetOptions.builder()
                                 .bundling(builderOptions.command(functionRandomBibleVersePackagingInstructions).build())
                                 .build()))
-                .handler("functionrandombibleverse.App").memorySize(1024).timeout(Duration.seconds(10))
+                .handler("randombibleverse.App").memorySize(1024).timeout(Duration.seconds(10))
                 .logRetention(RetentionDays.ONE_WEEK).build());
 
         HttpApi httpApi = new HttpApi(this, "bibleverse-api", HttpApiProps.builder().apiName("bibleverse-api").build());
