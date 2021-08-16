@@ -17,6 +17,7 @@ import software.amazon.awscdk.services.s3.deployment.BucketDeploymentProps;
 import software.amazon.awscdk.services.s3.deployment.ISource;
 import software.amazon.awscdk.services.s3.deployment.Source;
 import software.amazon.awscdk.services.s3.assets.AssetOptions;
+import software.amazon.awscdk.services.apigatewayv2.DomainMappingOptions;
 import software.amazon.awscdk.services.apigatewayv2.AddRoutesOptions;
 import software.amazon.awscdk.services.apigatewayv2.HttpApi;
 import software.amazon.awscdk.services.apigatewayv2.HttpApiProps;
@@ -75,12 +76,11 @@ public class BibleVerseStack extends Stack {
                 .handler("randombibleverse.App").memorySize(1024).timeout(Duration.seconds(10))
                 .logRetention(RetentionDays.ONE_WEEK).build());
 
-        HttpApi httpApi = new HttpApi(this, "bibleverse-api", HttpApiProps.builder().apiName("bibleverse-api").build());
 
-        httpApi.addRoutes(
-                AddRoutesOptions.builder().path("/random").methods(singletonList(HttpMethod.GET))
-                        .integration(new LambdaProxyIntegration(LambdaProxyIntegrationProps.builder()
-                                .handler(functionRandomBibleVerse).payloadFormatVersion(PayloadFormatVersion.VERSION_2_0).build()))
-                        .build());
+        HttpApi httpApi = new HttpApi(this, "bibleverse-api", HttpApiProps.builder()
+        .apiName("bibleverse-api")
+        .createDefaultStage(true)
+        .defaultIntegration(new LambdaProxyIntegration(LambdaProxyIntegrationProps.builder()
+        .handler(functionRandomBibleVerse).payloadFormatVersion(PayloadFormatVersion.VERSION_2_0).build())).build());
     }
 }
