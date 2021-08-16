@@ -56,6 +56,21 @@
 			<version>${cdk.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>software.amazon.awscdk</groupId>
+			<artifactId>apigatewayv2</artifactId>
+			<version>${cdk.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>software.amazon.awscdk</groupId>
+			<artifactId>apigatewayv2-integrations</artifactId>
+			<version>${cdk.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>software.amazon.awscdk</groupId>
+			<artifactId>lambda</artifactId>
+			<version>${cdk.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 			<version>${junit.version}</version>
