@@ -67,6 +67,11 @@
 		</dependency>
 		<dependency>
 			<groupId>software.amazon.awscdk</groupId>
+			<artifactId>certificatemanager</artifactId>
+			<version>${cdk.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>software.amazon.awscdk</groupId>
 			<artifactId>lambda</artifactId>
 			<version>${cdk.version}</version>
 		</dependency>
