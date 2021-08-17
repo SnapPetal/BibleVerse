@@ -2,16 +2,22 @@ package randombibleverse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.util.StringUtils;
+
 import software.amazon.lambda.powertools.metrics.Metrics;
 import software.amazon.lambda.powertools.tracing.Tracing;
 
@@ -31,11 +37,8 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
 
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent().withHeaders(headers);
         try {
-            final String pageContents = this.getPageContents("https://checkip.amazonaws.com");
-            final String dataBucketName = System.getenv("DATA_BUCKET_NAME");
-            String output = String.format(
-                    "{ \"message\": \"hello world\", \"location\": \"%s\", \"data_bucket_name\": \"%s\" }", pageContents,
-                    dataBucketName);
+            InputStream booksInputStream = this.getFile("Books.json");
+            String output = this.getAsString(booksInputStream);
 
             return response.withStatusCode(200).withBody(output);
         } catch (IOException e) {
@@ -43,11 +46,31 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
         }
     }
 
-    @Tracing(namespace = "getPageContents")
-    private String getPageContents(String address) throws IOException {
-        URL url = new URL(address);
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
-            return br.lines().collect(Collectors.joining(System.lineSeparator()));
+    @Tracing(namespace = "getFile")
+    private InputStream getFile(String fileName) throws SdkClientException {
+        final String dataBucketName = System.getenv("DATA_BUCKET_NAME");
+
+        AmazonS3 s3client = AmazonS3ClientBuilder.standard().build();
+
+        S3Object s3object = s3client.getObject(dataBucketName, fileName);
+        S3ObjectInputStream inputStream = s3object.getObjectContent();
+        return inputStream;
+    }
+
+    @Tracing(namespace = "getAsString")
+    private String getAsString(InputStream is) throws IOException {
+        if (is == null)
+            return "";
+        StringBuilder sb = new StringBuilder();
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, StringUtils.UTF8));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+        } finally {
+            is.close();
         }
+        return sb.toString();
     }
 }
