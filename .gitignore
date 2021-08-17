@@ -1,15 +1,15 @@
 .classpath.txt
 target
+bin
 .classpath
 .project
 .idea
 .settings
 .vscode
 *.iml
+*.factorypath
 
 # CDK asset staging directory
 .cdk.staging
+cdk.context.json
 cdk.out
-
-*.factorypath
-infrastructure/cdk.context.json
