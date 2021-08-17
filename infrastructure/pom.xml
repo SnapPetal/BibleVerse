@@ -72,6 +72,16 @@
 		</dependency>
 		<dependency>
 			<groupId>software.amazon.awscdk</groupId>
+			<artifactId>route53</artifactId>
+			<version>${cdk.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>software.amazon.awscdk</groupId>
+			<artifactId>route53-targets</artifactId>
+			<version>${cdk.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>software.amazon.awscdk</groupId>
 			<artifactId>lambda</artifactId>
 			<version>${cdk.version}</version>
 		</dependency>

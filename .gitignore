@@ -12,3 +12,4 @@ target
 cdk.out
 
 *.factorypath
+infrastructure/cdk.context.json

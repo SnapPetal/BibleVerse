@@ -26,6 +26,13 @@ import software.amazon.awscdk.services.apigatewayv2.PayloadFormatVersion;
 import software.amazon.awscdk.services.apigatewayv2.integrations.LambdaProxyIntegration;
 import software.amazon.awscdk.services.apigatewayv2.integrations.LambdaProxyIntegrationProps;
 import software.amazon.awscdk.services.certificatemanager.Certificate;
+import software.amazon.awscdk.services.route53.HostedZone;
+import software.amazon.awscdk.services.route53.HostedZoneAttributes;
+import software.amazon.awscdk.services.route53.HostedZoneProviderProps;
+import software.amazon.awscdk.services.route53.ARecord;
+import software.amazon.awscdk.services.route53.ARecordProps;
+import software.amazon.awscdk.services.route53.RecordTarget;
+import software.amazon.awscdk.services.route53.targets.ApiGatewayv2DomainProperties;
 import software.amazon.awscdk.services.lambda.Code;
 import software.amazon.awscdk.services.lambda.Function;
 import software.amazon.awscdk.services.lambda.FunctionProps;
@@ -85,6 +92,15 @@ public class BibleVerseStack extends Stack {
                                 .defaultIntegration(new LambdaProxyIntegration(LambdaProxyIntegrationProps.builder()
                                                 .handler(functionRandomBibleVerse)
                                                 .payloadFormatVersion(PayloadFormatVersion.VERSION_2_0).build()))
+                                .build());
+
+                ARecord aliasRecord = new ARecord(this, "AliasRecord", ARecordProps.builder()
+                                .recordName("bibleverse.thonbecker.com")
+                                .zone(HostedZone.fromLookup(this, "HostedZoneLookup",
+                                                HostedZoneProviderProps.builder().domainName("thonbecker.com").build()))
+                                .target(RecordTarget.fromAlias(
+                                                new ApiGatewayv2DomainProperties(domainName.getRegionalDomainName(),
+                                                                domainName.getRegionalHostedZoneId())))
                                 .build());
         }
 }
