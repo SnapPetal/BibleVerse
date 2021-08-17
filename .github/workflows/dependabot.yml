@@ -1,0 +1,16 @@
+
+version: 2
+updates:
+  - package-ecosystem: "maven"
+    directory: "/infrastructure"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "maven"
+    directory: "/software"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "github-actions"
+    schedule:
+      interval: "daily"
