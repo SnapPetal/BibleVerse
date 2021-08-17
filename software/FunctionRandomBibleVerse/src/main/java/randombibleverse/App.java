@@ -21,6 +21,7 @@ import com.amazonaws.util.StringUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
 import software.amazon.lambda.powertools.metrics.Metrics;
 import software.amazon.lambda.powertools.tracing.Tracing;
@@ -43,7 +44,8 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
         try {
             InputStream booksInputStream = this.getFile("Books.json");
             String jsonData = this.getAsString(booksInputStream);
-            String output = this.getRandomBook(jsonData);
+            String output = new JSONStringer().object().key("file").value(this.getRandomBook(jsonData)).endObject()
+                    .toString();
 
             return response.withStatusCode(200).withBody(output);
         } catch (IOException e) {
