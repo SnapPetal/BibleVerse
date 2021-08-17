@@ -29,19 +29,17 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
         headers.put("Content-Type", "application/json");
         headers.put("X-Custom-Header", "application/json");
 
-        APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent()
-                .withHeaders(headers);
+        APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent().withHeaders(headers);
         try {
             final String pageContents = this.getPageContents("https://checkip.amazonaws.com");
-            String output = String.format("{ \"message\": \"hello world\", \"location\": \"%s\" }", pageContents);
+            final String dataBucketArn = System.getenv("DATA_BUCKET_ARN");
+            String output = String.format(
+                    "{ \"message\": \"hello world\", \"location\": \"%s\", \"data_bucket_arn\": \"%s\" }", pageContents,
+                    dataBucketArn);
 
-            return response
-                    .withStatusCode(200)
-                    .withBody(output);
+            return response.withStatusCode(200).withBody(output);
         } catch (IOException e) {
-            return response
-                    .withBody("{}")
-                    .withStatusCode(500);
+            return response.withBody("{}").withStatusCode(500);
         }
     }
 
