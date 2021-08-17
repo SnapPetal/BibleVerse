@@ -3,6 +3,8 @@ package com.myorg;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import software.amazon.awscdk.core.BundlingOptions;
 import software.amazon.awscdk.core.Construct;
 import software.amazon.awscdk.core.DockerVolume;
@@ -71,6 +73,9 @@ public class BibleVerseStack extends Stack {
                                                 .containerPath("/root/.m2/").build()))
                                 .user("root").outputType(ARCHIVED);
 
+                Map<String, String> environmentMap = new HashMap<>();
+                environmentMap.put("DATA_BUCKET_ARN", bucket.getBucketArn());
+
                 Function functionRandomBibleVerse = new Function(this, "FunctionRandomBibleVerse",
                                 FunctionProps.builder().runtime(Runtime.JAVA_11).code(Code.fromAsset("../software/",
                                                 AssetOptions.builder().bundling(builderOptions
@@ -78,7 +83,9 @@ public class BibleVerseStack extends Stack {
                                                                 .build()).build()))
                                                 .handler("randombibleverse.App").memorySize(1024)
                                                 .timeout(Duration.seconds(10)).logRetention(RetentionDays.ONE_WEEK)
-                                                .build());
+                                                .environment(environmentMap).build());
+
+                bucket.grantRead(functionRandomBibleVerse);
 
                 DomainName domainName = new DomainName(this, "DomainName", DomainNameProps.builder()
                                 .domainName("bibleverse.thonbecker.com")
