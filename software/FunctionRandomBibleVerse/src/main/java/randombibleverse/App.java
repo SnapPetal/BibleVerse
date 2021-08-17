@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.lambda.runtime.Context;
@@ -17,6 +18,9 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.util.StringUtils;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import software.amazon.lambda.powertools.metrics.Metrics;
 import software.amazon.lambda.powertools.tracing.Tracing;
@@ -38,7 +42,8 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent().withHeaders(headers);
         try {
             InputStream booksInputStream = this.getFile("Books.json");
-            String output = this.getAsString(booksInputStream);
+            String jsonData = this.getAsString(booksInputStream);
+            String output = this.getRandomBook(jsonData);
 
             return response.withStatusCode(200).withBody(output);
         } catch (IOException e) {
@@ -46,8 +51,16 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
         }
     }
 
+    @Tracing(namespace = "getRandomBook")
+    private String getRandomBook(String bookData) throws IOException {
+        JSONObject jsnobject = new JSONObject(bookData);
+        JSONArray jsonArray = jsnobject.getJSONArray("files");
+        int randomIndex = this.getRandomNumber(1, jsonArray.length());
+        return jsonArray.getString(randomIndex - 1);
+    }
+
     @Tracing(namespace = "getFile")
-    private InputStream getFile(String fileName) throws SdkClientException {
+    private InputStream getFile(String fileName) throws IOException {
         final String dataBucketName = System.getenv("DATA_BUCKET_NAME");
 
         AmazonS3 s3client = AmazonS3ClientBuilder.standard().build();
@@ -72,5 +85,11 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
             is.close();
         }
         return sb.toString();
+    }
+
+    @Tracing(namespace = "getRandomNumber")
+    private int getRandomNumber(int min, int max) {
+        Random random = new Random();
+        return random.ints(min, max).findFirst().getAsInt();
     }
 }
