@@ -74,7 +74,7 @@ public class BibleVerseStack extends Stack {
                                 .user("root").outputType(ARCHIVED);
 
                 Map<String, String> environmentMap = new HashMap<>();
-                environmentMap.put("DATA_BUCKET_ARN", bucket.getBucketArn());
+                environmentMap.put("DATA_BUCKET_NAME", bucket.getBucketName());
 
                 Function functionRandomBibleVerse = new Function(this, "FunctionRandomBibleVerse",
                                 FunctionProps.builder().runtime(Runtime.JAVA_11).code(Code.fromAsset("../software/",

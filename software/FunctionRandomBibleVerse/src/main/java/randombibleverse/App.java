@@ -32,10 +32,10 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent().withHeaders(headers);
         try {
             final String pageContents = this.getPageContents("https://checkip.amazonaws.com");
-            final String dataBucketArn = System.getenv("DATA_BUCKET_ARN");
+            final String dataBucketName = System.getenv("DATA_BUCKET_NAME");
             String output = String.format(
-                    "{ \"message\": \"hello world\", \"location\": \"%s\", \"data_bucket_arn\": \"%s\" }", pageContents,
-                    dataBucketArn);
+                    "{ \"message\": \"hello world\", \"location\": \"%s\", \"data_bucket_name\": \"%s\" }", pageContents,
+                    dataBucketName);
 
             return response.withStatusCode(200).withBody(output);
         } catch (IOException e) {
