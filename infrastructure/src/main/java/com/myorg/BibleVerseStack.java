@@ -19,10 +19,12 @@ import software.amazon.awscdk.services.s3.deployment.BucketDeploymentProps;
 import software.amazon.awscdk.services.s3.deployment.ISource;
 import software.amazon.awscdk.services.s3.deployment.Source;
 import software.amazon.awscdk.services.s3.assets.AssetOptions;
+import software.amazon.awscdk.services.apigatewayv2.CorsPreflightOptions;
 import software.amazon.awscdk.services.apigatewayv2.DomainMappingOptions;
 import software.amazon.awscdk.services.apigatewayv2.DomainName;
 import software.amazon.awscdk.services.apigatewayv2.DomainNameProps;
 import software.amazon.awscdk.services.apigatewayv2.HttpApi;
+import software.amazon.awscdk.services.apigatewayv2.CorsHttpMethod;
 import software.amazon.awscdk.services.apigatewayv2.HttpApiProps;
 import software.amazon.awscdk.services.apigatewayv2.PayloadFormatVersion;
 import software.amazon.awscdk.services.apigatewayv2.integrations.LambdaProxyIntegration;
@@ -93,8 +95,17 @@ public class BibleVerseStack extends Stack {
                                                 "arn:aws:acm:us-west-2:664759038511:certificate/6bb68629-cffb-40a2-8ba4-dcc2d57259c4"))
                                 .build());
 
+                List<String> corsOrigins = new ArrayList<>(1);
+                corsOrigins.add("*");
+
+                List<CorsHttpMethod> corsHttpMethods = new ArrayList<>(2);
+                corsHttpMethods.add(CorsHttpMethod.GET);
+                corsHttpMethods.add(CorsHttpMethod.OPTIONS);
+
                 HttpApi httpApi = new HttpApi(this, "bibleverse-api", HttpApiProps.builder().apiName("bibleverse-api")
                                 .createDefaultStage(true)
+                                .corsPreflight(CorsPreflightOptions.builder().allowMethods(corsHttpMethods)
+                                                .allowOrigins(corsOrigins).build())
                                 .defaultDomainMapping(DomainMappingOptions.builder().domainName(domainName).build())
                                 .defaultIntegration(new LambdaProxyIntegration(LambdaProxyIntegrationProps.builder()
                                                 .handler(functionRandomBibleVerse)
