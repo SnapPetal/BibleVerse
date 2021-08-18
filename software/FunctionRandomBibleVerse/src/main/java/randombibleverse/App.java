@@ -43,9 +43,13 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent().withHeaders(headers);
         try {
             InputStream booksInputStream = this.getFile("Books.json");
-            String jsonData = this.getAsString(booksInputStream);
-            String output = new JSONStringer().object().key("file").value(this.getRandomBook(jsonData)).endObject()
-                    .toString();
+            String booksData = this.getAsString(booksInputStream);
+
+            String book = this.getRandomBook(booksData);
+            InputStream bookInputStream = this.getFile(book);
+            String bookData = this.getAsString(bookInputStream);
+
+            String output = this.getRandomVerse(bookData);
 
             return response.withStatusCode(200).withBody(output);
         } catch (IOException e) {
@@ -53,12 +57,33 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
         }
     }
 
+    @Tracing(namespace = "getRandomVerse")
+    private String getRandomVerse(String bookData) throws IOException {
+        JSONObject bookObject = new JSONObject(bookData);
+
+        // Lookup random chapter from the book
+        JSONArray chaptersArray = bookObject.getJSONArray("chapters");
+        int randomChapterIndex = this.getRandomNumber(1, chaptersArray.length());
+        JSONObject randomChapterObject = chaptersArray.getJSONObject(randomChapterIndex - 1);
+
+        // Lookup random verse from the chapter
+        JSONArray randomVerseArray = randomChapterObject.getJSONArray("verses");
+        int randomVerseIndex = this.getRandomNumber(1, randomVerseArray.length());
+        JSONObject randomVerseObject = randomVerseArray.getJSONObject(randomVerseIndex - 1);
+
+        // Create JSON object
+        return new JSONStringer().object().key("book").value(bookObject.getString("book")).key("chapter")
+                .value(randomChapterObject.getString("chapter")).key("verse")
+                .value(randomVerseObject.getString("verse")).key("text").value(randomVerseObject.getString("text"))
+                .endObject().toString();
+    }
+
     @Tracing(namespace = "getRandomBook")
-    private String getRandomBook(String bookData) throws IOException {
-        JSONObject jsnobject = new JSONObject(bookData);
-        JSONArray jsonArray = jsnobject.getJSONArray("files");
-        int randomIndex = this.getRandomNumber(1, jsonArray.length());
-        return jsonArray.getString(randomIndex - 1);
+    private String getRandomBook(String booksData) throws IOException {
+        JSONObject booksObject = new JSONObject(booksData);
+        JSONArray filesArray = booksObject.getJSONArray("files");
+        int randomIndex = this.getRandomNumber(1, filesArray.length());
+        return filesArray.getString(randomIndex - 1);
     }
 
     @Tracing(namespace = "getFile")
