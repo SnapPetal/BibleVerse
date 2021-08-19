@@ -83,8 +83,10 @@ public class BibleVerseStack extends Stack {
                                                 AssetOptions.builder().bundling(builderOptions
                                                                 .command(functionRandomBibleVersePackagingInstructions)
                                                                 .build()).build()))
-                                                .handler("randombibleverse.App").memorySize(1024)
-                                                .timeout(Duration.seconds(10)).logRetention(RetentionDays.ONE_WEEK)
+                                                .handler("randombibleverse.App")
+                                                .memorySize(2048)
+                                                .timeout(Duration.seconds(20))
+                                                .logRetention(RetentionDays.ONE_WEEK)
                                                 .environment(environmentMap).build());
 
                 bucket.grantRead(functionRandomBibleVerse);

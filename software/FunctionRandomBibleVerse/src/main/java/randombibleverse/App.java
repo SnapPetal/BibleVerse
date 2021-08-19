@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
@@ -89,7 +90,7 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
     private InputStream getFile(String fileName) throws IOException {
         final String dataBucketName = System.getenv("DATA_BUCKET_NAME");
 
-        AmazonS3 s3client = AmazonS3ClientBuilder.standard().build();
+        AmazonS3 s3client = AmazonS3ClientBuilder.defaultClient();
 
         S3Object s3object = s3client.getObject(dataBucketName, fileName);
         S3ObjectInputStream inputStream = s3object.getObjectContent();
