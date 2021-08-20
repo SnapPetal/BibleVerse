@@ -63,8 +63,8 @@ public class BibleVerseStack extends Stack {
                                 new BucketDeploymentProps.Builder().sources(sources).destinationBucket(bucket).build());
 
                 List<String> functionRandomBibleVersePackagingInstructions = Arrays.asList("/bin/sh", "-c",
-                                "cd RandomBibleVerse " + "&& mvn clean install "
-                                                + "&& cp /asset-input/RandomBibleVerse/target/functionrandombibleverse.jar /asset-output/");
+                                "mvn clean install "
+                                                + "&& cp /asset-input/target/bibleverse.jar /asset-output/");
 
                 BundlingOptions.Builder builderOptions = BundlingOptions.builder()
                                 .command(functionRandomBibleVersePackagingInstructions)
@@ -78,11 +78,11 @@ public class BibleVerseStack extends Stack {
                 environmentMap.put("DATA_BUCKET_NAME", bucket.getBucketName());
 
                 Function functionRandomBibleVerse = new Function(this, "FunctionRandomBibleVerse",
-                                FunctionProps.builder().runtime(Runtime.JAVA_11).code(Code.fromAsset("../functions/",
+                                FunctionProps.builder().runtime(Runtime.JAVA_11).code(Code.fromAsset("../lambda/",
                                                 AssetOptions.builder().bundling(builderOptions
                                                                 .command(functionRandomBibleVersePackagingInstructions)
                                                                 .build()).build()))
-                                                .handler("randombibleverse.Application")
+                                                .handler("com.thonbecker.randombibleverse.Application")
                                                 .memorySize(2048)
                                                 .timeout(Duration.seconds(20))
                                                 .logRetention(RetentionDays.ONE_WEEK)

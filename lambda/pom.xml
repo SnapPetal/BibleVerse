@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>bibleverse</groupId>
-	<artifactId>FunctionRandomBibleVerse</artifactId>
+	<groupId>lambda</groupId>
+	<artifactId>bibleverse</artifactId>
 	<version>1.0</version>
 	<packaging>jar</packaging>
 	<properties>
@@ -88,7 +88,7 @@
 				<version>3.2.4</version>
 				<configuration>
 					<createDependencyReducedPom>false</createDependencyReducedPom>
-					<finalName>functionrandombibleverse</finalName>
+					<finalName>bibleverse</finalName>
 				</configuration>
 				<executions>
 					<execution>
