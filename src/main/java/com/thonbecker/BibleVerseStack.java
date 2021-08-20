@@ -1,4 +1,4 @@
-package com.myorg;
+package com.thonbecker;
 
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class BibleVerseStack extends Stack {
                                 .removalPolicy(RemovalPolicy.DESTROY).autoDeleteObjects(true).build());
 
                 List<ISource> sources = new ArrayList<>(1);
-                sources.add(Source.asset("../data"));
+                sources.add(Source.asset("./data"));
 
                 BucketDeployment bucketDeployment = new BucketDeployment(this, "BucketDeployment",
                                 new BucketDeploymentProps.Builder().sources(sources).destinationBucket(bucket).build());
@@ -78,7 +78,7 @@ public class BibleVerseStack extends Stack {
                 environmentMap.put("DATA_BUCKET_NAME", bucket.getBucketName());
 
                 Function functionRandomBibleVerse = new Function(this, "FunctionRandomBibleVerse",
-                                FunctionProps.builder().runtime(Runtime.JAVA_11).code(Code.fromAsset("../lambda/",
+                                FunctionProps.builder().runtime(Runtime.JAVA_11).code(Code.fromAsset("./lambda/",
                                                 AssetOptions.builder().bundling(builderOptions
                                                                 .command(functionRandomBibleVersePackagingInstructions)
                                                                 .build()).build()))
