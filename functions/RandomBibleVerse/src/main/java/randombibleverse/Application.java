@@ -31,7 +31,7 @@ import static software.amazon.lambda.powertools.tracing.CaptureMode.DISABLED;
 /**
  * Handler for requests to Lambda function.
  */
-public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
+public class Application implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
     @Tracing(captureMode = DISABLED)
     @Metrics(captureColdStart = true)

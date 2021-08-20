@@ -31,7 +31,6 @@ import software.amazon.awscdk.services.apigatewayv2.integrations.LambdaProxyInte
 import software.amazon.awscdk.services.apigatewayv2.integrations.LambdaProxyIntegrationProps;
 import software.amazon.awscdk.services.certificatemanager.Certificate;
 import software.amazon.awscdk.services.route53.HostedZone;
-import software.amazon.awscdk.services.route53.HostedZoneAttributes;
 import software.amazon.awscdk.services.route53.HostedZoneProviderProps;
 import software.amazon.awscdk.services.route53.ARecord;
 import software.amazon.awscdk.services.route53.ARecordProps;
@@ -64,8 +63,8 @@ public class BibleVerseStack extends Stack {
                                 new BucketDeploymentProps.Builder().sources(sources).destinationBucket(bucket).build());
 
                 List<String> functionRandomBibleVersePackagingInstructions = Arrays.asList("/bin/sh", "-c",
-                                "cd FunctionRandomBibleVerse " + "&& mvn clean install "
-                                                + "&& cp /asset-input/FunctionRandomBibleVerse/target/functionrandombibleverse.jar /asset-output/");
+                                "cd RandomBibleVerse " + "&& mvn clean install "
+                                                + "&& cp /asset-input/RandomBibleVerse/target/functionrandombibleverse.jar /asset-output/");
 
                 BundlingOptions.Builder builderOptions = BundlingOptions.builder()
                                 .command(functionRandomBibleVersePackagingInstructions)
@@ -79,11 +78,11 @@ public class BibleVerseStack extends Stack {
                 environmentMap.put("DATA_BUCKET_NAME", bucket.getBucketName());
 
                 Function functionRandomBibleVerse = new Function(this, "FunctionRandomBibleVerse",
-                                FunctionProps.builder().runtime(Runtime.JAVA_11).code(Code.fromAsset("../software/",
+                                FunctionProps.builder().runtime(Runtime.JAVA_11).code(Code.fromAsset("../functions/",
                                                 AssetOptions.builder().bundling(builderOptions
                                                                 .command(functionRandomBibleVersePackagingInstructions)
                                                                 .build()).build()))
-                                                .handler("randombibleverse.App")
+                                                .handler("randombibleverse.Application")
                                                 .memorySize(2048)
                                                 .timeout(Duration.seconds(20))
                                                 .logRetention(RetentionDays.ONE_WEEK)
