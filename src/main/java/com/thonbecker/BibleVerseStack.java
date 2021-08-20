@@ -82,9 +82,9 @@ public class BibleVerseStack extends Stack {
                                                 AssetOptions.builder().bundling(builderOptions
                                                                 .command(functionRandomBibleVersePackagingInstructions)
                                                                 .build()).build()))
-                                                .handler("com.thonbecker.randombibleverse.Application")
-                                                .memorySize(2048)
-                                                .timeout(Duration.seconds(20))
+                                                .handler("com.thonbecker.randombibleverse.LambdaHandler")
+                                                .memorySize(1024)
+                                                .timeout(Duration.seconds(10))
                                                 .logRetention(RetentionDays.ONE_WEEK)
                                                 .environment(environmentMap).build());
 
