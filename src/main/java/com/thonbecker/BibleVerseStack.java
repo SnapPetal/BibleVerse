@@ -14,6 +14,7 @@ import software.amazon.awscdk.core.StackProps;
 import software.amazon.awscdk.core.RemovalPolicy;
 import software.amazon.awscdk.services.s3.Bucket;
 import software.amazon.awscdk.services.s3.BucketProps;
+import software.amazon.awscdk.services.s3.HttpMethods;
 import software.amazon.awscdk.services.s3.deployment.BucketDeployment;
 import software.amazon.awscdk.services.s3.deployment.BucketDeploymentProps;
 import software.amazon.awscdk.services.s3.deployment.ISource;
@@ -24,8 +25,10 @@ import software.amazon.awscdk.services.apigatewayv2.DomainMappingOptions;
 import software.amazon.awscdk.services.apigatewayv2.DomainName;
 import software.amazon.awscdk.services.apigatewayv2.DomainNameProps;
 import software.amazon.awscdk.services.apigatewayv2.HttpApi;
+import software.amazon.awscdk.services.apigatewayv2.AddRoutesOptions;
 import software.amazon.awscdk.services.apigatewayv2.CorsHttpMethod;
 import software.amazon.awscdk.services.apigatewayv2.HttpApiProps;
+import software.amazon.awscdk.services.apigatewayv2.HttpMethod;
 import software.amazon.awscdk.services.apigatewayv2.PayloadFormatVersion;
 import software.amazon.awscdk.services.apigatewayv2.integrations.LambdaProxyIntegration;
 import software.amazon.awscdk.services.apigatewayv2.integrations.LambdaProxyIntegrationProps;
@@ -62,13 +65,11 @@ public class BibleVerseStack extends Stack {
                 BucketDeployment bucketDeployment = new BucketDeployment(this, "BucketDeployment",
                                 new BucketDeploymentProps.Builder().sources(sources).destinationBucket(bucket).build());
 
-                List<String> functionRandomBibleVersePackagingInstructions = Arrays.asList("/bin/sh", "-c",
-                                "mvn clean install "
-                                                + "&& cp /asset-input/target/bibleverse.jar /asset-output/");
+                List<String> BibleVersePackagingInstructions = Arrays.asList("/bin/sh", "-c",
+                                "mvn clean install " + "&& cp /asset-input/target/bibleverse.jar /asset-output/");
 
                 BundlingOptions.Builder builderOptions = BundlingOptions.builder()
-                                .command(functionRandomBibleVersePackagingInstructions)
-                                .image(Runtime.JAVA_11.getBundlingImage())
+                                .command(BibleVersePackagingInstructions).image(Runtime.JAVA_11.getBundlingImage())
                                 .volumes(singletonList(DockerVolume.builder()
                                                 .hostPath(System.getProperty("user.home") + "/.m2/")
                                                 .containerPath("/root/.m2/").build()))
@@ -77,16 +78,21 @@ public class BibleVerseStack extends Stack {
                 Map<String, String> environmentMap = new HashMap<>();
                 environmentMap.put("DATA_BUCKET_NAME", bucket.getBucketName());
 
-                Function functionRandomBibleVerse = new Function(this, "FunctionRandomBibleVerse",
-                                FunctionProps.builder().runtime(Runtime.JAVA_11).code(Code.fromAsset("./lambda/",
-                                                AssetOptions.builder().bundling(builderOptions
-                                                                .command(functionRandomBibleVersePackagingInstructions)
-                                                                .build()).build()))
-                                                .handler("com.thonbecker.randombibleverse.LambdaHandler")
-                                                .memorySize(1024)
-                                                .timeout(Duration.seconds(10))
-                                                .logRetention(RetentionDays.ONE_WEEK)
-                                                .environment(environmentMap).build());
+                Function functionRandomBibleVerse = new Function(this, "FunctionRandomBibleVerse", FunctionProps
+                                .builder().runtime(Runtime.JAVA_11)
+                                .code(Code.fromAsset("./lambda/",
+                                                AssetOptions.builder().bundling(builderOptions.build()).build()))
+                                .handler("com.thonbecker.randombibleverse.LambdaHandler").memorySize(1024)
+                                .timeout(Duration.seconds(10)).logRetention(RetentionDays.ONE_WEEK)
+                                .environment(environmentMap).build());
+
+                Function functionAboutBibleVerse = new Function(this, "FunctionAboutBibleVerse", FunctionProps.builder()
+                                .runtime(Runtime.JAVA_11)
+                                .code(Code.fromAsset("./lambda/",
+                                                AssetOptions.builder().bundling(builderOptions.build()).build()))
+                                .handler("com.thonbecker.about.LambdaHandler").memorySize(1024)
+                                .timeout(Duration.seconds(10)).logRetention(RetentionDays.ONE_WEEK)
+                                .environment(environmentMap).build());
 
                 bucket.grantRead(functionRandomBibleVerse);
 
@@ -103,12 +109,24 @@ public class BibleVerseStack extends Stack {
                 corsHttpMethods.add(CorsHttpMethod.GET);
                 corsHttpMethods.add(CorsHttpMethod.OPTIONS);
 
+                List<HttpMethod> httpMethods = new ArrayList<>();
+                httpMethods.add(HttpMethod.GET);
+
                 HttpApi httpApi = new HttpApi(this, "bibleverse-api", HttpApiProps.builder().apiName("bibleverse-api")
                                 .createDefaultStage(true)
                                 .corsPreflight(CorsPreflightOptions.builder().allowMethods(corsHttpMethods)
                                                 .allowOrigins(corsOrigins).build())
                                 .defaultDomainMapping(DomainMappingOptions.builder().domainName(domainName).build())
-                                .defaultIntegration(new LambdaProxyIntegration(LambdaProxyIntegrationProps.builder()
+                                .build());
+
+                httpApi.addRoutes(AddRoutesOptions.builder().path("/about").methods(httpMethods)
+                                .integration(new LambdaProxyIntegration(LambdaProxyIntegrationProps.builder()
+                                                .handler(functionAboutBibleVerse)
+                                                .payloadFormatVersion(PayloadFormatVersion.VERSION_2_0).build()))
+                                .build());
+
+                httpApi.addRoutes(AddRoutesOptions.builder().path("/random").methods(httpMethods)
+                                .integration(new LambdaProxyIntegration(LambdaProxyIntegrationProps.builder()
                                                 .handler(functionRandomBibleVerse)
                                                 .payloadFormatVersion(PayloadFormatVersion.VERSION_2_0).build()))
                                 .build());
