@@ -30,11 +30,10 @@ import org.json.JSONStringer;
 public class LambdaHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIGatewayV2HTTPResponse> {
     private static final Logger logger = LoggerFactory.getLogger(LambdaHandler.class);
     private static final AmazonS3 s3client = AmazonS3ClientBuilder.defaultClient();
+    private static final Map<String, String> headers = Map.of("Content-Type", "application/json");
 
     @Override
     public APIGatewayV2HTTPResponse handleRequest(final APIGatewayV2HTTPEvent event, final Context context) {
-        Map<String, String> headers = Map.of("Content-Type", "application/json");
-
         try {
             InputStream booksInputStream = this.getFile("Books.json");
             String booksData = this.getAsString(booksInputStream);
