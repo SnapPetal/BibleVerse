@@ -1,8 +1,4 @@
-# Welcome to your CDK Java project!
-
-This is a blank project for Java development with CDK.
-
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+# Welcome to your Bible verse Java project!
 
 It is a [Maven](https://maven.apache.org/) based project, so you can open this project with any Maven compatible Java IDE to build and run tests.
 
@@ -15,4 +11,4 @@ It is a [Maven](https://maven.apache.org/) based project, so you can open this p
  * `cdk diff`        compare deployed stack with current state
  * `cdk docs`        open CDK documentation
 
-Enjoy!
+[Random Bible verse API](https://bibleverse.thonbecker.com/)
