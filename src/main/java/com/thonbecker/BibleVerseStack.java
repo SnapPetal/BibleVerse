@@ -14,7 +14,6 @@ import software.amazon.awscdk.core.StackProps;
 import software.amazon.awscdk.core.RemovalPolicy;
 import software.amazon.awscdk.services.s3.Bucket;
 import software.amazon.awscdk.services.s3.BucketProps;
-import software.amazon.awscdk.services.s3.HttpMethods;
 import software.amazon.awscdk.services.s3.deployment.BucketDeployment;
 import software.amazon.awscdk.services.s3.deployment.BucketDeploymentProps;
 import software.amazon.awscdk.services.s3.deployment.ISource;
