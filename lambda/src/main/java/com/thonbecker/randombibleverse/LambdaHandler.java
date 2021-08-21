@@ -20,13 +20,6 @@ import com.amazonaws.util.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONStringer;
-
-import software.amazon.awssdk.http.HttpStatusCode;
-import software.amazon.lambda.powertools.metrics.Metrics;
-import software.amazon.lambda.powertools.tracing.Tracing;
-
-import static software.amazon.lambda.powertools.tracing.CaptureMode.DISABLED;
-
 /**
  * Handler for requests to Lambda function.
  */
@@ -38,8 +31,6 @@ public class LambdaHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIG
     }
 
     @Override
-    @Tracing(captureMode = DISABLED)
-    @Metrics(captureColdStart = true)
     public APIGatewayV2HTTPResponse handleRequest(final APIGatewayV2HTTPEvent event, final Context context) {
         Map<String, String> headers = Map.of("Content-Type", "application/json");
 
@@ -53,22 +44,20 @@ public class LambdaHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIG
 
             String output = this.getRandomVerse(bookData);
 
-            return APIGatewayV2HTTPResponse.builder().withStatusCode(HttpStatusCode.OK).withBody(output)
+            return APIGatewayV2HTTPResponse.builder().withStatusCode(200).withBody(output)
                     .withHeaders(headers).build();
 
         } catch (IOException e) {
-            return APIGatewayV2HTTPResponse.builder().withStatusCode(HttpStatusCode.INTERNAL_SERVER_ERROR)
+            return APIGatewayV2HTTPResponse.builder().withStatusCode(500)
                     .withBody(getErrorMessage(e)).withHeaders(headers).build();
         }
     }
 
-    @Tracing(namespace = "getErrorMessage")
     private String getErrorMessage(Exception exception) {
         return new JSONStringer().object().key("error_message").value(exception.getLocalizedMessage()).endObject()
                 .toString();
     }
 
-    @Tracing(namespace = "getRandomVerse")
     private String getRandomVerse(String bookData) throws IOException {
         JSONObject bookObject = new JSONObject(bookData);
 
@@ -89,7 +78,6 @@ public class LambdaHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIG
                 .endObject().toString();
     }
 
-    @Tracing(namespace = "getRandomBook")
     private String getRandomBook(String booksData) throws IOException {
         JSONObject booksObject = new JSONObject(booksData);
         JSONArray filesArray = booksObject.getJSONArray("files");
@@ -97,7 +85,6 @@ public class LambdaHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIG
         return filesArray.getString(randomIndex - 1);
     }
 
-    @Tracing(namespace = "getFile")
     private InputStream getFile(String fileName) throws IOException {
         final String dataBucketName = System.getenv("DATA_BUCKET_NAME");
 
@@ -106,7 +93,6 @@ public class LambdaHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIG
         return inputStream;
     }
 
-    @Tracing(namespace = "getAsString")
     private String getAsString(InputStream is) throws IOException {
         if (is == null)
             return "";
@@ -123,7 +109,6 @@ public class LambdaHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIG
         return sb.toString();
     }
 
-    @Tracing(namespace = "getRandomNumber")
     private int getRandomNumber(int min, int max) {
         Random random = new Random();
         return random.ints(min, max).findFirst().getAsInt();

@@ -13,16 +13,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>software.amazon.lambda</groupId>
-			<artifactId>powertools-tracing</artifactId>
-			<version>1.7.2</version>
-		</dependency>
-		<dependency>
-			<groupId>software.amazon.lambda</groupId>
-			<artifactId>powertools-metrics</artifactId>
-			<version>1.7.2</version>
-		</dependency>
-		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-lambda-java-core</artifactId>
 			<version>1.2.1</version>
@@ -70,16 +60,6 @@
 					<source>${maven.compiler.source}</source>
 					<target>${maven.compiler.target}</target>
 					<complianceLevel>${maven.compiler.target}</complianceLevel>
-					<aspectLibraries>
-						<aspectLibrary>
-							<groupId>software.amazon.lambda</groupId>
-							<artifactId>powertools-tracing</artifactId>
-						</aspectLibrary>
-						<aspectLibrary>
-							<groupId>software.amazon.lambda</groupId>
-							<artifactId>powertools-metrics</artifactId>
-						</aspectLibrary>
-					</aspectLibraries>
 				</configuration>
 			</plugin>
 			<plugin>
