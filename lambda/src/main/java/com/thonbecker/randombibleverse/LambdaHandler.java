@@ -17,18 +17,19 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.util.StringUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONStringer;
+
 /**
  * Handler for requests to Lambda function.
  */
 public class LambdaHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIGatewayV2HTTPResponse> {
-    private AmazonS3 s3client;
-
-    public LambdaHandler() {
-        s3client = AmazonS3ClientBuilder.defaultClient();
-    }
+    private static final Logger logger = LoggerFactory.getLogger(LambdaHandler.class);
+    private static final AmazonS3 s3client = AmazonS3ClientBuilder.defaultClient();
 
     @Override
     public APIGatewayV2HTTPResponse handleRequest(final APIGatewayV2HTTPEvent event, final Context context) {
@@ -44,12 +45,12 @@ public class LambdaHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIG
 
             String output = this.getRandomVerse(bookData);
 
-            return APIGatewayV2HTTPResponse.builder().withStatusCode(200).withBody(output)
-                    .withHeaders(headers).build();
+            return APIGatewayV2HTTPResponse.builder().withStatusCode(200).withBody(output).withHeaders(headers).build();
 
         } catch (IOException e) {
-            return APIGatewayV2HTTPResponse.builder().withStatusCode(500)
-                    .withBody(getErrorMessage(e)).withHeaders(headers).build();
+            logger.info("Failed to generate random verse: {}", e.getMessage());
+            return APIGatewayV2HTTPResponse.builder().withStatusCode(500).withBody(getErrorMessage(e))
+                    .withHeaders(headers).build();
         }
     }
 
