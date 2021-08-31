@@ -2,12 +2,12 @@
 version: 2
 updates:
   - package-ecosystem: "maven"
-    directory: "/infrastructure"
+    directory: "/"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "maven"
-    directory: "/software/FunctionRandomBibleVerse"
+    directory: "/lambda"
     schedule:
       interval: "daily"
 
