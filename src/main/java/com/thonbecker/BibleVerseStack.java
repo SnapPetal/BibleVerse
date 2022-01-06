@@ -30,8 +30,8 @@ import software.amazon.awscdk.services.apigatewayv2.CorsHttpMethod;
 import software.amazon.awscdk.services.apigatewayv2.HttpApiProps;
 import software.amazon.awscdk.services.apigatewayv2.HttpMethod;
 import software.amazon.awscdk.services.apigatewayv2.PayloadFormatVersion;
-import software.amazon.awscdk.services.apigatewayv2.integrations.LambdaProxyIntegration;
-import software.amazon.awscdk.services.apigatewayv2.integrations.LambdaProxyIntegrationProps;
+import software.amazon.awscdk.services.apigatewayv2.integrations.HttpLambdaIntegration;
+import software.amazon.awscdk.services.apigatewayv2.integrations.HttpLambdaIntegrationProps;
 import software.amazon.awscdk.services.certificatemanager.Certificate;
 import software.amazon.awscdk.services.route53.HostedZone;
 import software.amazon.awscdk.services.route53.HostedZoneProviderProps;
@@ -117,14 +117,14 @@ public class BibleVerseStack extends Stack {
                 .build());
 
         httpApi.addRoutes(AddRoutesOptions.builder().path("/about").methods(httpMethods)
-                .integration(new LambdaProxyIntegration(LambdaProxyIntegrationProps.builder()
-                        .handler(functionAboutBibleVerse)
+                .integration(new HttpLambdaIntegration("LambdaIntegrationAbout", functionAboutBibleVerse,
+                HttpLambdaIntegrationProps.builder()
                         .payloadFormatVersion(PayloadFormatVersion.VERSION_2_0).build()))
                 .build());
 
         httpApi.addRoutes(AddRoutesOptions.builder().path("/random").methods(httpMethods)
-                .integration(new LambdaProxyIntegration(LambdaProxyIntegrationProps.builder()
-                        .handler(functionRandomBibleVerse)
+                .integration(new HttpLambdaIntegration("LambdaIntegrationRandom",functionRandomBibleVerse,
+                HttpLambdaIntegrationProps.builder()
                         .payloadFormatVersion(PayloadFormatVersion.VERSION_2_0).build()))
                 .build());
 
