@@ -1,8 +1,6 @@
 package com.thonbecker.bibleverse;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.S3Object;
+
 import com.amazonaws.util.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -11,21 +9,30 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cglib.core.internal.Function;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Paths;
 import java.util.Random;
 
 @SpringBootApplication
 public class BibleVerseApplication {
-    private static final AmazonS3 s3client = AmazonS3ClientBuilder.defaultClient();
-    private static final Random random = new Random();
+    private final Random random = new Random();
+    private final ResourceLoader resourceLoader;
+    private final String dataBucketName = System.getenv("DATA_BUCKET_NAME");
+
+    public BibleVerseApplication(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(BibleVerseApplication.class, args);
     }
+
     @Bean
     public Function<String, String> getAbout() {
         return value -> new JSONStringer().object().key("status").value("healthy").key("version").value("1.0.0").endObject().toString();
@@ -73,11 +80,10 @@ public class BibleVerseApplication {
         return filesArray.getString(randomIndex - 1);
     }
 
-    private InputStream getFile(String fileName) {
-        final String dataBucketName = System.getenv("DATA_BUCKET_NAME");
-
-        S3Object s3object = s3client.getObject(dataBucketName, fileName);
-        return s3object.getObjectContent();
+    private InputStream getFile(String fileName) throws IOException {
+        String s3Url = String.valueOf(Paths.get(dataBucketName, fileName));
+        Resource resource = resourceLoader.getResource(s3Url);
+        return resource.getInputStream();
     }
 
     private String getAsString(InputStream is) throws IOException {
