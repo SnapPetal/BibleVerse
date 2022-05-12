@@ -13,3 +13,6 @@ bin
 .cdk.staging
 cdk.context.json
 cdk.out
+
+# MacOS
+.DS_Store
