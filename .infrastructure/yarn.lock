@@ -640,23 +640,23 @@
   dependencies:
     "@types/istanbul-lib-report" "*"
 
-"@types/jest@^27.4.1":
-  version "27.5.0"
-  resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/@types/jest/-/jest-27.5.0.tgz#e04ed1824ca6b1dd0438997ba60f99a7405d4c7b"
-  integrity sha512-9RBFx7r4k+msyj/arpfaa0WOOEcaAZNmN+j80KFbFCoSqCJGHTz7YMAMGQW9Xmqm5w6l5c25vbSjMwlikJi5+g==
+"@types/jest@^27.5.1":
+  version "27.5.1"
+  resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/@types/jest/-/jest-27.5.1.tgz#2c8b6dc6ff85c33bcd07d0b62cb3d19ddfdb3ab9"
+  integrity sha512-fUy7YRpT+rHXto1YlL+J9rs0uLGyiqVt3ZOTQR+4ROc47yNl8WLdVLgUloBRhOxP1PZvguHl44T3H0wAWxahYQ==
   dependencies:
     jest-matcher-utils "^27.0.0"
     pretty-format "^27.0.0"
 
-"@types/node@*", "@types/node@17.0.32":
-  version "17.0.32"
-  resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/@types/node/-/node-17.0.32.tgz#51d59d7a90ef2d0ae961791e0900cad2393a0149"
-  integrity sha512-eAIcfAvhf/BkHcf4pkLJ7ECpBAhh9kcxRBpip9cTiO+hf+aJrsxYxBeS6OXvOd9WqNAJmavXVpZvY1rBjNsXmw==
+"@types/node@*", "@types/node@17.0.33":
+  version "17.0.33"
+  resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/@types/node/-/node-17.0.33.tgz#3c1879b276dc63e73030bb91165e62a4509cd506"
+  integrity sha512-miWq2m2FiQZmaHfdZNcbpp9PuXg34W5JZ5CrJ/BaS70VuhoJENBEQybeiYSaPBRNq6KQGnjfEnc/F3PN++D+XQ==
 
 "@types/prettier@^2.1.5":
-  version "2.6.0"
-  resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/@types/prettier/-/prettier-2.6.0.tgz#efcbd41937f9ae7434c714ab698604822d890759"
-  integrity sha512-G/AdOadiZhnJp0jXCaBQU449W2h716OW/EoXeYkCytxKL06X1WCXB4DZpp8TpZ8eyIJVS1cw4lrlkkSYU21cDw==
+  version "2.6.1"
+  resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/@types/prettier/-/prettier-2.6.1.tgz#76e72d8a775eef7ce649c63c8acae1a0824bbaed"
+  integrity sha512-XFjFHmaLVifrAKaZ+EKghFHtHSUonyw8P2Qmy2/+osBnrKbH9UYtlK10zg8/kCt47MFilll/DEDKy3DHfJ0URw==
 
 "@types/stack-utils@^2.0.0":
   version "2.0.1"
@@ -741,10 +741,10 @@ at-least-node@^1.0.0:
   resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/at-least-node/-/at-least-node-1.0.0.tgz#602cd4b46e844ad4effc92a8011a3c46e0238dc2"
   integrity sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==
 
-aws-cdk-lib@2.23.0:
-  version "2.23.0"
-  resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/aws-cdk-lib/-/aws-cdk-lib-2.23.0.tgz#82983dd86d732096ee6e14ba43e2cd46a92d58c9"
-  integrity sha512-ewUgVRnXA31yZPz/X1BfyVgzCBlPfyjadmkYQsZgT3vRE+NbddTRG4O5r+k9O46xLC41YV8ZMCnhsfPfa5VRKA==
+aws-cdk-lib@2.24.1:
+  version "2.24.1"
+  resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/aws-cdk-lib/-/aws-cdk-lib-2.24.1.tgz#197d10216b384850c01205acc8e4818838964302"
+  integrity sha512-xGeEX+9wPGppSiIUdf/JTLMmqMikGhlSi7bjijl3lwncZtySkdjX0j+W2A1fuKp0S8Yd2axkwVkltIMxzNH/gw==
   dependencies:
     "@balena/dockerignore" "^1.0.2"
     case "1.6.3"
@@ -753,13 +753,13 @@ aws-cdk-lib@2.23.0:
     jsonschema "^1.4.0"
     minimatch "^3.1.2"
     punycode "^2.1.1"
-    semver "^7.3.6"
+    semver "^7.3.7"
     yaml "1.10.2"
 
-aws-cdk@2.23.0:
-  version "2.23.0"
-  resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/aws-cdk/-/aws-cdk-2.23.0.tgz#be805347cf97391c6cd3ea24cd3eb405125c7865"
-  integrity sha512-sfVrFImP+mRVdqCDsJcM63inAp9/XSmmeE2hlg8Bqwf7WUblRmj22xiD53VbL2dkc1la6UN05TkfNDAGT0skow==
+aws-cdk@2.24.1:
+  version "2.24.1"
+  resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/aws-cdk/-/aws-cdk-2.24.1.tgz#88c3ece3c01674fbed4e131f3391aa199b5e3871"
+  integrity sha512-fDcJW7tLbqsCvWB3eZY6glRrjRE45VqLT+JuKz3C2jIe6qXkwV8dBwYXElwY/tTCh/hDlpWtCNMRdhmrdE25GQ==
   optionalDependencies:
     fsevents "2.3.2"
 
@@ -889,9 +889,9 @@ camelcase@^6.2.0:
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
 caniuse-lite@^1.0.30001332:
-  version "1.0.30001339"
-  resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/caniuse-lite/-/caniuse-lite-1.0.30001339.tgz#f9aece4ea8156071613b27791547ba0b33f176cf"
-  integrity sha512-Es8PiVqCe+uXdms0Gu5xP5PF2bxLR7OBp3wUzUnuO7OHzhOfCyg3hdiGWVPVxhiuniOzng+hTc1u3fEQ0TlkSQ==
+  version "1.0.30001341"
+  resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/caniuse-lite/-/caniuse-lite-1.0.30001341.tgz#59590c8ffa8b5939cf4161f00827b8873ad72498"
+  integrity sha512-2SodVrFFtvGENGCv0ChVJIDQ0KPaS1cg7/qtfMaICgeMolDdo/Z2OD32F0Aq9yl6F4YFwGPBS5AaPqNYiW4PoA==
 
 case@1.6.3:
   version "1.6.3"
@@ -978,10 +978,10 @@ concat-map@0.0.1:
   resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
   integrity sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=
 
-constructs@^10.0.0:
-  version "10.1.6"
-  resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/constructs/-/constructs-10.1.6.tgz#4ce9da0a43a9aaaeb6010f7aa0fa199d09ce1f01"
-  integrity sha512-67RUgF9MScCUuYQ2jr4SgcVcTV4YWeGa13cLOGUivzlpMVN6DSm0p/OQz5X49GHUeY/i+AMZMxGVy9xN6sM07g==
+constructs@^10.1.7:
+  version "10.1.7"
+  resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/constructs/-/constructs-10.1.7.tgz#d96fbeedb8d091720f4d3347c955bd42593abaa2"
+  integrity sha512-U4zMM7Iqa81hzLSfof9IW9R7kUWSMdhzV2JS8lXGISRFXljZrd4qwzYxhSO/VMB+CS24Tt0/YYLyNxET+6/3Mg==
 
 convert-source-map@^1.4.0, convert-source-map@^1.6.0, convert-source-map@^1.7.0:
   version "1.8.0"
@@ -1187,14 +1187,14 @@ get-stream@^6.0.0:
   integrity sha512-ts6Wi+2j3jQjqi70w5AlN8DFnkSwC+MqmxEzdEALB2qXZYV3X/b1CTfgPLGJNMeAWxdPfU8FO1ms3NUfaHCPYg==
 
 glob@^7.1.3, glob@^7.1.4:
-  version "7.2.0"
-  resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/glob/-/glob-7.2.0.tgz#d15535af7732e02e948f4c41628bd910293f6023"
-  integrity sha512-lmLf6gtyrPq8tTjSmrO94wBeQbFR3HbLHbuyD69wuyQkImp2hWqMGB47OX65FBkPffO641IP9jWa1z4ivqG26Q==
+  version "7.2.2"
+  resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/glob/-/glob-7.2.2.tgz#29deb38e1ef90f132d5958abe9c3ee8e87f3c318"
+  integrity sha512-NzDgHDiJwKYByLrL5lONmQFpK/2G78SMMfo+E9CuGlX4IkvfKDsiQSNPwAYxEy+e6p7ZQ3uslSLlwlJcqezBmQ==
   dependencies:
     fs.realpath "^1.0.0"
     inflight "^1.0.4"
     inherits "2"
-    minimatch "^3.0.4"
+    minimatch "^3.1.1"
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
@@ -1840,7 +1840,7 @@ mimic-fn@^2.1.0:
   resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/mimic-fn/-/mimic-fn-2.1.0.tgz#7ed2c2ccccaf84d3ffcb7a69b57711fc2083401b"
   integrity sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg==
 
-minimatch@^3.0.4, minimatch@^3.1.2:
+minimatch@^3.0.4, minimatch@^3.1.1, minimatch@^3.1.2:
   version "3.1.2"
   resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/minimatch/-/minimatch-3.1.2.tgz#19cd194bfd3e428f049a70817c038d89ab4be35b"
   integrity sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==
@@ -2049,7 +2049,7 @@ safe-buffer@~5.1.1:
   resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/safe-buffer/-/safe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"
   integrity sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==
 
-semver@7.x, semver@^7.3.5, semver@^7.3.6:
+semver@7.x, semver@^7.3.5, semver@^7.3.7:
   version "7.3.7"
   resolved "https://ramseysolutions.jfrog.io/artifactory/api/npm/npm/semver/-/semver-7.3.7.tgz#12c5b649afdbf9049707796e22a4028814ce523f"
   integrity sha512-QlYTucUYOews+WeEujDoEGziz4K6c47V/Bd+LjSSYcA94p+DmINdf7ncaUinThfvZyu13lN9OY1XDxt8C0Tw0g==
