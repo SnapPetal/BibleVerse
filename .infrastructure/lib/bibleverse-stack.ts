@@ -15,7 +15,7 @@ export class BibleVerseStack extends Stack {
     });
 
     const deployment = new s3deploy.BucketDeployment(this, 'DeployBibleVerse', {
-      sources: [s3deploy.Source.asset(path.join(__dirname, 'my-website'))],
+      sources: [s3deploy.Source.asset(path.join(__dirname, 'data'))],
       destinationBucket: bucket,
     });
   }
