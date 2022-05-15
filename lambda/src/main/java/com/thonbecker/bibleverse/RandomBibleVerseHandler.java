@@ -18,12 +18,12 @@ import java.util.Random;
 import java.util.function.Function;
 
 @Component
-public class RandomBibleVerse implements Function<Void, String> {
+public class RandomBibleVerseHandler implements Function<Void, String> {
     private final Random random = new Random();
     private final ResourceLoader resourceLoader;
     private final String dataBucketName = System.getenv("DATA_BUCKET_NAME");
 
-    public RandomBibleVerse(ResourceLoader resourceLoader) {
+    public RandomBibleVerseHandler(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
     }
 

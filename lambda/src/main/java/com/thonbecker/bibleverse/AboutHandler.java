@@ -6,7 +6,7 @@ import org.json.JSONStringer;
 import org.springframework.stereotype.Component;
 
 @Component
-public class About implements Function<Void, String> {
+public class AboutHandler implements Function<Void, String> {
 
     @Override
     public String apply(Void unused) {

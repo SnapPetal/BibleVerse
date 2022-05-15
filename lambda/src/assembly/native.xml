@@ -22,7 +22,7 @@
             <useDefaultExcludes>true</useDefaultExcludes>
             <fileMode>0775</fileMode>
             <includes>
-                <include>cloud-function-aws</include>
+                <include>bibleverse</include>
             </includes>
         </fileSet>
     </fileSets>
