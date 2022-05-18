@@ -18,7 +18,7 @@ import java.util.Random;
 import java.util.function.Function;
 
 @Component
-public class RandomBibleVerseHandler implements Function<Void, String> {
+public class RandomBibleVerseHandler implements Function<String, String> {
     private final Random random = new Random();
     private final ResourceLoader resourceLoader;
     private final String dataBucketName = System.getenv("DATA_BUCKET_NAME");
@@ -28,7 +28,7 @@ public class RandomBibleVerseHandler implements Function<Void, String> {
     }
 
     @Override
-    public String apply(Void unused) {
+    public String apply(String event) {
         try {
             InputStream booksInputStream = this.getFile("Books.json");
             String booksData = this.getAsString(booksInputStream);
