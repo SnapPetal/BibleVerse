@@ -1,19 +1,22 @@
 package com.thonbecker.bibleverse;
 
-import org.json.JSONStringer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cglib.core.internal.Function;
-import org.springframework.context.annotation.Bean;
+import org.springframework.util.ObjectUtils;
+
+import java.util.Arrays;
 
 @SpringBootApplication
 public class BibleVerseApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(BibleVerseApplication.class, args);
-    }
+    private static final Log logger = LogFactory.getLog(BibleVerseApplication.class);
 
-    @Bean
-    public Function<String, String> about() {
-        return value -> new JSONStringer().object().key("status").value("healthy").key("version").value("1.0.0").endObject().toString();
+    public static void main(String[] args) {
+        logger.info("==> Starting: BibleVerseApplication");
+        if (!ObjectUtils.isEmpty(args)) {
+            logger.info("==>  args: " + Arrays.asList(args));
+        }
+        SpringApplication.run(BibleVerseApplication.class, args);
     }
 }

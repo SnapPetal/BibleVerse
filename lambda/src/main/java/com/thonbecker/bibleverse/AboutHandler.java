@@ -1,12 +1,11 @@
 package com.thonbecker.bibleverse;
 
-import java.util.function.Function;
-
 import org.json.JSONStringer;
 import org.springframework.stereotype.Component;
 
-@Component
+import java.util.function.Function;
 
+@Component
 public class AboutHandler implements Function<String, String> {
 
     @Override
