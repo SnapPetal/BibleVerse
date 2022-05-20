@@ -16,18 +16,28 @@ export class BibleVerseStack extends Stack {
     });
 
     const deployment = new s3deploy.BucketDeployment(this, 'DeployBibleVerse', {
-      sources: [s3deploy.Source.asset(path.join(__dirname, 'data'))],
+      sources: [s3deploy.Source.asset(path.join(__dirname, 'data','files'))],
       destinationBucket: bucket,
     });
 
-    const codeVersion = "stringOrMethodToGetCodeVersion";
-    const fn = new lambda.Function(this, 'MyFunction', {
+    const aboutFunction = new lambda.Function(this, 'AboutFunction', {
       runtime: lambda.Runtime.PROVIDED,
-      handler: 'index.handler',
-      code: lambda.Code.fromAsset(path.join(__dirname, 'lambda-handler')),
+      handler: 'functionRouter',
+      code: lambda.Code.fromAsset(path.join(__dirname, 'data','lambda','bibleverse-0.0.1-SNAPSHOT-native-zip.zip')),
       environment: {
-        'DATA_BUCKET_NAME': bucket.bucketName,
+        'spring_cloud_function_definition': 'aboutHandler'
       },
     });
+
+    const fn = new lambda.Function(this, 'RandomBibleVerseFunction', {
+      runtime: lambda.Runtime.PROVIDED,
+      handler: 'functionRouter',
+      code: lambda.Code.fromAsset(path.join(__dirname, 'data','lambda','bibleverse-0.0.1-SNAPSHOT-native-zip.zip')),
+      environment: {
+        'DATA_BUCKET_NAME': bucket.bucketName,
+        'spring_cloud_function_definition': 'randomBibleVerseHandler'
+      },
+    });
+
   }
 }
