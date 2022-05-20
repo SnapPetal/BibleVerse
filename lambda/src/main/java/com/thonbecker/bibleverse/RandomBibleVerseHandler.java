@@ -67,7 +67,7 @@ public class RandomBibleVerseHandler implements Function<String, String> {
     }
 
     private InputStream getFile(String fileName) throws IOException {
-        String s3Url = String.valueOf(Paths.get(dataBucketName, fileName));
+        String s3Url = String.valueOf(new StringBuilder("s3://").append(Paths.get(dataBucketName, fileName)));
         Resource resource = resourceLoader.getResource(s3Url);
         return resource.getInputStream();
     }
