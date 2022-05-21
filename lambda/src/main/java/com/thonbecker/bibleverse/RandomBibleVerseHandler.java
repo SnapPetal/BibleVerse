@@ -1,30 +1,24 @@
 package com.thonbecker.bibleverse;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.util.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONStringer;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 import java.util.Random;
 import java.util.function.Function;
 
 @Component
 public class RandomBibleVerseHandler implements Function<String, String> {
-    private final Random random = new Random();
-    private final ResourceLoader resourceLoader;
-    private final String dataBucketName = System.getenv("DATA_BUCKET_NAME");
-
-    public RandomBibleVerseHandler(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
-    }
+    private static final AmazonS3 s3client = AmazonS3ClientBuilder.defaultClient();
 
     @Override
     public String apply(String event) {
@@ -66,17 +60,18 @@ public class RandomBibleVerseHandler implements Function<String, String> {
         return filesArray.getString(randomIndex - 1);
     }
 
-    private InputStream getFile(String fileName) throws IOException {
-        String s3Url = String.valueOf(new StringBuilder("s3://").append(Paths.get(dataBucketName, fileName)));
-        Resource resource = resourceLoader.getResource(s3Url);
-        return resource.getInputStream();
+    private InputStream getFile(String fileName) {
+        final String dataBucketName = System.getenv("DATA_BUCKET_NAME");
+
+        S3Object s3object = s3client.getObject(dataBucketName, fileName);
+        return s3object.getObjectContent();
     }
 
     private String getAsString(InputStream is) throws IOException {
         if (is == null) return "";
         StringBuilder sb = new StringBuilder();
         try (is) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.US_ASCII));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, StringUtils.UTF8));
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
@@ -86,6 +81,7 @@ public class RandomBibleVerseHandler implements Function<String, String> {
     }
 
     private int getRandomNumber(int max) {
+        Random random = new Random();
         return random.ints(1, max).findFirst().getAsInt();
     }
 }
