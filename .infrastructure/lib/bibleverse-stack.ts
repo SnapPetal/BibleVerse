@@ -29,7 +29,7 @@ export class BibleVerseStack extends Stack {
       },
     });
 
-    const fn = new lambda.Function(this, 'RandomBibleVerseFunction', {
+    const randomBibleVerseFunction = new lambda.Function(this, 'RandomBibleVerseFunction', {
       runtime: lambda.Runtime.PROVIDED,
       handler: 'functionRouter',
       code: lambda.Code.fromAsset(path.join(__dirname, 'data','lambda','bibleverse-0.0.1-SNAPSHOT-native-zip.zip')),
@@ -38,6 +38,7 @@ export class BibleVerseStack extends Stack {
         'spring_cloud_function_definition': 'randomBibleVerseHandler'
       },
     });
-
+    
+    bucket.grantRead(randomBibleVerseFunction);
   }
 }
