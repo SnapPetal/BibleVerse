@@ -96,7 +96,7 @@ public class BibleVerseStack extends Stack {
         DomainName domainName = new DomainName(this, "DomainName", DomainNameProps.builder()
                 .domainName("bibleverse.thonbecker.com")
                 .certificate(Certificate.fromCertificateArn(this, "CertificateLookup",
-                        "arn:aws:acm:us-west-2:664759038511:certificate/6bb68629-cffb-40a2-8ba4-dcc2d57259c4"))
+                        "arn:aws:acm:us-east-1:664759038511:certificate/1554896f-abd0-4a6b-8955-710f2f4a642b"))
                 .build());
 
         List<String> corsOrigins = new ArrayList<>(1);
