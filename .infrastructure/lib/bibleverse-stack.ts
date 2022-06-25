@@ -119,7 +119,6 @@ export class BibleVerseStack extends Stack {
       defaultIntegration: new HttpLambdaIntegration('DefaultIntegration', randomBibleVerseFunction),
       defaultDomainMapping: {
         domainName: dn,
-        mappingKey: 'prod',
       },
     });
     
