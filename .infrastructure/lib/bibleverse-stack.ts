@@ -112,7 +112,7 @@ export class BibleVerseStack extends Stack {
     
     const dn = new DomainName(this, 'DomainNameBibleVerse', {
       domainName,
-      certificate: acm.Certificate.fromCertificateArn(this, 'cert', certArn),
+      certificate: acm.Certificate.fromCertificateArn(this, 'CertificateBibleVerse', certArn),
     });
     
     const api = new HttpApi(this, 'HttpApiBibleVerse', {
@@ -130,7 +130,11 @@ export class BibleVerseStack extends Stack {
     });
     
     new route53.ARecord(this, 'AliasBibleVerse', {
-      zone: route53.HostedZone.fromLookup(this, 'HostedZoneBibleVerse', { domainName: 'thonbecker.com' }),
+      zone: route53.HostedZone.fromHostedZoneAttributes(this, 'HostedZoneBibleVerse', {
+        hostedZoneId: 'Z0960080GF0UBO75OWWP',
+        zoneName: 'thonbecker.com'
+      }),
+      recordName: 'bibleverse.thonbecker.com',
       target: route53.RecordTarget.fromAlias(new targets.ApiGatewayv2DomainProperties(dn.regionalDomainName, dn.regionalHostedZoneId)),
     });
   }
