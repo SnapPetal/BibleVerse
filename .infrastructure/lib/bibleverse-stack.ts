@@ -6,9 +6,12 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as efs from 'aws-cdk-lib/aws-efs';
 import * as acm from 'aws-cdk-lib/aws-certificatemanager';
+import * as route53 from 'aws-cdk-lib/aws-route53';
+import * as targets from 'aws-cdk-lib/aws-route53-targets';
 import { 
   HttpApi,
   DomainName,
+  HttpMethod,
 } from '@aws-cdk/aws-apigatewayv2-alpha';
 import { 
   HttpUrlIntegration,
@@ -118,6 +121,17 @@ export class BibleVerseStack extends Stack {
         domainName: dn,
         mappingKey: 'prod',
       },
+    });
+    
+    api.addRoutes({
+      path: '/about',
+      methods: [ HttpMethod.GET ],
+      integration: new HttpLambdaIntegration('AboutIntegration', aboutFunction)
+    });
+    
+    new route53.AaaaRecord(this, 'AliasBibleVerse', {
+      zone: route53.HostedZone.fromLookup(this, 'HostedZoneBibleVerse', { domainName: 'thonbecker.com' }),
+      target: route53.RecordTarget.fromAlias(new targets.ApiGatewayv2DomainProperties(dn.regionalDomainName, dn.regionalHostedZoneId)),
     });
   }
 }

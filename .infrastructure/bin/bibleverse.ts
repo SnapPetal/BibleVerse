@@ -4,4 +4,10 @@ import * as cdk from 'aws-cdk-lib';
 import {BibleVerseStack} from "../lib/bibleverse-stack";
 
 const app = new cdk.App();
-new BibleVerseStack(app, 'BibleVerseStack');
+new BibleVerseStack(app, 'BibleVerseStack', {
+    env: {
+        account: process.env.CDK_DEFAULT_ACCOUNT,
+        region: process.env.CDK_DEFAULT_REGION
+        
+    }}
+);
