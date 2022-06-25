@@ -129,7 +129,7 @@ export class BibleVerseStack extends Stack {
       integration: new HttpLambdaIntegration('AboutIntegration', aboutFunction)
     });
     
-    new route53.AaaaRecord(this, 'AliasBibleVerse', {
+    new route53.ARecord(this, 'AliasBibleVerse', {
       zone: route53.HostedZone.fromLookup(this, 'HostedZoneBibleVerse', { domainName: 'thonbecker.com' }),
       target: route53.RecordTarget.fromAlias(new targets.ApiGatewayv2DomainProperties(dn.regionalDomainName, dn.regionalHostedZoneId)),
     });
