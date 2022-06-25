@@ -74,7 +74,7 @@ export class BibleVerseStack extends Stack {
       securityGroup: securityGroupEfs
     });
     
-    const accessPoint = fs.addAccessPoint('AccessPointBIbleVerse',{
+    const accessPoint = fs.addAccessPoint('AccessPointBibleVerse',{
       createAcl: {
         ownerGid: '1001',
         ownerUid: '1001',
