@@ -23,7 +23,7 @@
         <builder>paketobuildpacks/builder:tiny</builder>
 
         <java.version>11</java.version>
-        <wavefront.version>2.2.2</wavefront.version>
+        <wavefront.version>2.3.0</wavefront.version>
         <spring-cloud.version>2021.0.3</spring-cloud.version>
         <native.buildtools.version>0.9.11</native.buildtools.version>
         <spring-aot-maven-plugin.version>0.12.0</spring-aot-maven-plugin.version>
