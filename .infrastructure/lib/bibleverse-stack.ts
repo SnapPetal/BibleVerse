@@ -34,7 +34,6 @@ export class BibleVerseStack extends Stack {
       destinationBucket: bucket,
     });
 
-
     const vpc = new ec2.Vpc(this, 'VpcBibleVerse', {
       maxAzs: 2
     });
@@ -46,7 +45,7 @@ export class BibleVerseStack extends Stack {
     });
     
     securityGroupDataSync.addEgressRule(
-      ec2.Peer.anyIpv4(),
+      ec2.Peer.ipv4(vpc.vpcCidrBlock),
       ec2.Port.tcp(2049),
       'allow DataSync outbound access from anywhere',
     );
@@ -58,21 +57,15 @@ export class BibleVerseStack extends Stack {
     });
     
     securityGroupEfs.addEgressRule(
-      ec2.Peer.anyIpv4(),
+      ec2.Peer.ipv4(vpc.vpcCidrBlock),
       ec2.Port.tcp(2049),
       'allow DataSync outbound access from anywhere',
     );
     
     securityGroupEfs.addIngressRule(
-      ec2.Peer.anyIpv4(),
+      ec2.Peer.ipv4(vpc.vpcCidrBlock),
       ec2.Port.tcp(2049),
       'allow DataSync inbound access',
-    );
-    
-    securityGroupEfs.addIngressRule(
-      ec2.Peer.anyIpv4(),
-      ec2.Port.allTraffic(),
-      'allow all outbound access',
     );
     
     const fs = new efs.FileSystem(this, 'FileSystemBibleVerse', {
