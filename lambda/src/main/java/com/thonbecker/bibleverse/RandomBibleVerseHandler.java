@@ -1,25 +1,16 @@
 package com.thonbecker.bibleverse;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.util.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Random;
 import java.util.function.Function;
 
 @Component
 public class RandomBibleVerseHandler implements Function<String, String> {
-    private static final AmazonS3 s3client = AmazonS3ClientBuilder.defaultClient();
-
     @Override
     public String apply(String event) {
         try {
@@ -61,17 +52,18 @@ public class RandomBibleVerseHandler implements Function<String, String> {
     }
 
     private InputStream getFile(String fileName) {
-        final String dataBucketName = System.getenv("DATA_BUCKET_NAME");
-
-        S3Object s3object = s3client.getObject(dataBucketName, fileName);
-        return s3object.getObjectContent();
+        try {
+            return new FileInputStream("/mnt/data/" + fileName);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private String getAsString(InputStream is) throws IOException {
         if (is == null) return "";
         StringBuilder sb = new StringBuilder();
         try (is) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is, StringUtils.UTF8));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
