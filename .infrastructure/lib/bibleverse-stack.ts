@@ -12,6 +12,7 @@ import {
   HttpApi,
   DomainName,
   HttpMethod,
+  CorsHttpMethod,
 } from '@aws-cdk/aws-apigatewayv2-alpha';
 import { 
   HttpUrlIntegration,
@@ -116,6 +117,16 @@ export class BibleVerseStack extends Stack {
     });
     
     const api = new HttpApi(this, 'HttpApiBibleVerse', {
+      corsPreflight: {
+        allowOrigins: ['https://thonbecker.com', 'https://www.thonbecker.com'],
+        allowMethods: [CorsHttpMethod.GET, CorsHttpMethod.OPTIONS],
+        allowHeaders: [
+          'Content-Type',
+          'Access-Control-Allow-Headers',
+          'Access-Control-Allow-Origin',
+          'Access-Control-Allow-Methods',
+        ],
+      },
       defaultIntegration: new HttpLambdaIntegration('DefaultIntegration', randomBibleVerseFunction),
       defaultDomainMapping: {
         domainName: dn,
