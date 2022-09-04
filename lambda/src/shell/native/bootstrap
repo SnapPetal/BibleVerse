@@ -1,5 +1,0 @@
-#!/bin/sh
-
-cd ${LAMBDA_TASK_ROOT:-.}
-
-./bibleverse -Dlogging.level.org.springframework=DEBUG
