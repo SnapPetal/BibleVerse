@@ -2,16 +2,16 @@ package com.thonbecker.bibleverse;
 
 import java.io.*;
 import java.util.Random;
-import java.util.function.Function;
+import java.util.function.Supplier;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RandomBibleVerseHandler implements Function<String, String> {
+public class RandomBibleVerseHandler implements Supplier<String> {
   @Override
-  public String apply(String event) {
+  public String get() {
     try {
       InputStream booksInputStream = this.getFile("Books.json");
       String booksData = this.getAsString(booksInputStream);

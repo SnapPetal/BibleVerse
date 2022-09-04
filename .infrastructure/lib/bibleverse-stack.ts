@@ -93,14 +93,20 @@ export class BibleVerseStack extends Stack {
 
     const aboutFunction = new lambda.Function(this, 'AboutFunction', {
       runtime: lambda.Runtime.JAVA_11,
-      handler: 'org.springframework.cloud.funcdtion.adapter.aws.FunctionInvokder:aboutHandler',
-      code: lambda.Code.fromAsset(path.join(__dirname, 'data','lambda','bibleverse.jar')),
+      handler: 'org.springframework.cloud.function.adapter.aws.FunctionInvoker',
+      code: lambda.Code.fromAsset(path.join(__dirname, 'data','lambda','bibleverse-0.0.1-SNAPSHOT-aws.jar')),
+      environment: {
+        'spring_cloud_function_definition': 'aboutHandler'
+      },
     });
 
     const randomBibleVerseFunction = new lambda.Function(this, 'RandomBibleVerseFunction', {
       runtime: lambda.Runtime.JAVA_11,
-      handler: 'org.springframework.cloud.funcdtion.adapter.aws.FunctionInvokder:randomBibleVerseHandler',
-      code: lambda.Code.fromAsset(path.join(__dirname, 'data','lambda','bibleverse.jar')),
+      handler: 'org.springframework.cloud.function.adapter.aws.FunctionInvoker',
+      code: lambda.Code.fromAsset(path.join(__dirname, 'data','lambda','bibleverse-0.0.1-SNAPSHOT-aws.jar')),
+      environment: {
+        'spring_cloud_function_definition': 'randomBibleVerseHandler'
+      },
       vpc,
       filesystem: lambda.FileSystem.fromEfsAccessPoint(accessPoint, '/mnt/data')
     });

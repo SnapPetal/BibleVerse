@@ -5,11 +5,6 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-
-  - package-ecosystem: "maven"
-    directory: "/lambda"
-    schedule:
-      interval: "daily"
       
   - package-ecosystem: "npm"
     directory: "/.infrastructure"

@@ -1,21 +1,26 @@
 package com.thonbecker.bibleverse;
 
-import java.util.function.Function;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import java.util.function.Supplier;
 import org.json.JSONStringer;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AboutHandler implements Function<String, String> {
+public class AboutHandler implements Supplier<APIGatewayProxyResponseEvent> {
 
   @Override
-  public String apply(String event) {
-    return new JSONStringer()
-        .object()
-        .key("status")
-        .value("healthy")
-        .key("version")
-        .value("1.0.0")
-        .endObject()
-        .toString();
+  public APIGatewayProxyResponseEvent get() {
+    APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
+    responseEvent.setStatusCode(200);
+    responseEvent.setBody(
+        new JSONStringer()
+            .object()
+            .key("status")
+            .value("healthy")
+            .key("version")
+            .value("1.0.0")
+            .endObject()
+            .toString());
+    return responseEvent;
   }
 }
