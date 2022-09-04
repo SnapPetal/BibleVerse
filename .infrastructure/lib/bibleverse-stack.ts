@@ -97,12 +97,13 @@ export class BibleVerseStack extends Stack {
       handler: 'org.springframework.cloud.function.adapter.aws.FunctionInvoker',
       code: lambda.Code.fromAsset(path.join(__dirname, 'data', 'lambda', 'bibleverse-0.0.1-SNAPSHOT-aws.jar')),
       environment: {
-        'spring_cloud_function_definition': 'aboutHandler'
+        'SPRING_CLOUD_FUNCTION_DEFINITION': 'aboutHandler'
       },
     });
 
     const randomBibleVerseFunction = new lambda.Function(this, 'RandomBibleVerseFunction', {
       runtime: lambda.Runtime.JAVA_11,
+      memorySize: 1024,
       handler: 'org.springframework.cloud.function.adapter.aws.FunctionInvoker',
       code: lambda.Code.fromAsset(path.join(__dirname, 'data', 'lambda', 'bibleverse-0.0.1-SNAPSHOT-aws.jar')),
       environment: {
