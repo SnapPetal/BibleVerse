@@ -19,6 +19,7 @@ import {
   HttpLambdaIntegration,
 } from '@aws-cdk/aws-apigatewayv2-integrations-alpha';
 import * as path from "path";
+import { RetentionDays } from 'aws-cdk-lib/aws-logs';
 
 export class BibleVerseStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -94,6 +95,7 @@ export class BibleVerseStack extends Stack {
     const aboutFunction = new lambda.Function(this, 'AboutFunction', {
       runtime: lambda.Runtime.JAVA_11,
       memorySize: 1024,
+      logRetention: RetentionDays.THREE_DAYS,
       handler: 'org.springframework.cloud.function.adapter.aws.FunctionInvoker',
       code: lambda.Code.fromAsset(path.join(__dirname, 'data', 'lambda', 'bibleverse-0.0.1-SNAPSHOT-aws.jar')),
       environment: {
@@ -104,6 +106,7 @@ export class BibleVerseStack extends Stack {
     const randomBibleVerseFunction = new lambda.Function(this, 'RandomBibleVerseFunction', {
       runtime: lambda.Runtime.JAVA_11,
       memorySize: 1024,
+      logRetention: RetentionDays.THREE_DAYS,
       handler: 'org.springframework.cloud.function.adapter.aws.FunctionInvoker',
       code: lambda.Code.fromAsset(path.join(__dirname, 'data', 'lambda', 'bibleverse-0.0.1-SNAPSHOT-aws.jar')),
       environment: {
