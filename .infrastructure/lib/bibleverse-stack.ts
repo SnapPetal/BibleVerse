@@ -97,7 +97,7 @@ export class BibleVerseStack extends Stack {
       memorySize: 1024,
       logRetention: RetentionDays.THREE_DAYS,
       handler: 'org.springframework.cloud.function.adapter.aws.FunctionInvoker',
-      code: lambda.Code.fromAsset(path.join(__dirname, 'data', 'lambda', 'bibleverse-0.0.1-SNAPSHOT-aws.jar')),
+      code: lambda.Code.fromAsset(path.join(__dirname, 'data', 'lambda', 'bibleverse-1.0.0-aws.jar')),
       environment: {
         'SPRING_CLOUD_FUNCTION_DEFINITION': 'aboutHandler'
       },
@@ -108,7 +108,7 @@ export class BibleVerseStack extends Stack {
       memorySize: 1024,
       logRetention: RetentionDays.THREE_DAYS,
       handler: 'org.springframework.cloud.function.adapter.aws.FunctionInvoker',
-      code: lambda.Code.fromAsset(path.join(__dirname, 'data', 'lambda', 'bibleverse-0.0.1-SNAPSHOT-aws.jar')),
+      code: lambda.Code.fromAsset(path.join(__dirname, 'data', 'lambda', 'bibleverse-1.0.0-aws.jar')),
       environment: {
         'SPRING_CLOUD_FUNCTION_DEFINITION': 'randomBibleVerseHandler'
       },
