@@ -30,7 +30,7 @@ export class BibleVerseStack extends Stack {
       memorySize: 1024,
       logRetention: RetentionDays.THREE_DAYS,
       handler: 'org.springframework.cloud.function.adapter.aws.FunctionInvoker',
-      code: lambda.Code.fromAsset(path.join(__dirname, 'data', 'lambda', 'bibleverse-1.0.0-aws.jar')),
+      code: lambda.Code.fromAsset(path.join(__dirname, 'data', 'lambda', 'bibleverse-1.0.1-aws.jar')),
       environment: {
         'SPRING_CLOUD_FUNCTION_DEFINITION': 'aboutHandler'
       },
@@ -41,13 +41,14 @@ export class BibleVerseStack extends Stack {
       memorySize: 1024,
       logRetention: RetentionDays.THREE_DAYS,
       handler: 'org.springframework.cloud.function.adapter.aws.FunctionInvoker',
-      code: lambda.Code.fromAsset(path.join(__dirname, 'data', 'lambda', 'bibleverse-1.0.0-aws.jar')),
+      code: lambda.Code.fromAsset(path.join(__dirname, 'data', 'lambda', 'bibleverse-1.0.1-aws.jar')),
       environment: {
         'SPRING_CLOUD_FUNCTION_DEFINITION': 'randomBibleVerseHandler'
       },
     });
 
     const bucket = new s3.Bucket(this, 'BibleVerseBucket', {
+      bucketName: 'bible-verse-data-files',
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       objectOwnership: s3.ObjectOwnership.BUCKET_OWNER_ENFORCED,
       removalPolicy: RemovalPolicy.DESTROY,

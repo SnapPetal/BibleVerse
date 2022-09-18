@@ -1,5 +1,8 @@
 package com.thonbecker.bibleverse;
 
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import java.io.*;
 import java.util.Random;
 import java.util.function.Supplier;
@@ -13,11 +16,11 @@ public class RandomBibleVerseHandler implements Supplier<String> {
   @Override
   public String get() {
     try {
-      InputStream booksInputStream = this.getFile("Books.json");
+      InputStream booksInputStream = this.getFile("kjv/Books.json");
       String booksData = this.getAsString(booksInputStream);
 
       String book = this.getRandomBook(booksData);
-      InputStream bookInputStream = this.getFile(book);
+      InputStream bookInputStream = this.getFile(String.format("kjv/%s", book));
       String bookData = this.getAsString(bookInputStream);
 
       return this.getRandomVerse(bookData);
@@ -25,6 +28,9 @@ public class RandomBibleVerseHandler implements Supplier<String> {
       throw new RuntimeException(e);
     }
   }
+
+  private AmazonS3 s3client =
+      AmazonS3ClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
 
   private String getRandomVerse(String bookData) {
     JSONObject bookObject = new JSONObject(bookData);
@@ -62,11 +68,7 @@ public class RandomBibleVerseHandler implements Supplier<String> {
   }
 
   private InputStream getFile(String fileName) {
-    try {
-      return new FileInputStream("/mnt/data/" + fileName);
-    } catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
-    }
+    return s3client.getObject("bible-verse-data-files", fileName).getObjectContent();
   }
 
   private String getAsString(InputStream is) throws IOException {
