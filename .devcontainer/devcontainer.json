@@ -48,6 +48,9 @@
   },
   "postCreateCommand": "mvn clean verify",
   "remoteUser": "vscode",
+  "remoteEnv": {
+    "AWS_PROFILE": "personal"
+  },
   "features": {
     "aws-cli": "latest"
   },
