@@ -52,6 +52,7 @@ export class BibleVerseStack extends Stack {
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       objectOwnership: s3.ObjectOwnership.BUCKET_OWNER_ENFORCED,
       removalPolicy: RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
     });
 
     const deployment = new s3deploy.BucketDeployment(this, 'DeployBibleVerse', {
