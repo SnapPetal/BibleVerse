@@ -1,7 +1,9 @@
 package com.thonbecker.bibleverse;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thonbecker.bibleverse.model.AboutResponse;
 import java.util.function.Supplier;
-import org.json.JSONStringer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Component;
@@ -12,17 +14,19 @@ public class AboutHandler implements Supplier<String> {
 
   @Override
   public String get() {
-    return new JSONStringer()
-        .object()
-        .key("status")
-        .value("healthy")
-        .key("package")
-        .value(buildProperties.getName())
-        .key("version")
-        .value(buildProperties.getVersion())
-        .key("time")
-        .value(buildProperties.getTime())
-        .endObject()
-        .toString();
+    AboutResponse aboutResponse =
+        AboutResponse.builder()
+            .status("healthy")
+            .packageName(buildProperties.getName())
+            .version(buildProperties.getVersion())
+            .time(buildProperties.getTime())
+            .build();
+
+    ObjectMapper mapper = new ObjectMapper();
+    try {
+      return mapper.writeValueAsString(aboutResponse);
+    } catch (JsonProcessingException e) {
+      return null;
+    }
   }
 }

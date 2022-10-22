@@ -41,7 +41,7 @@
       ]
     }
   },
-  "postCreateCommand": "mvn clean verify && chown -R node:node /home/node && aws configure import --profile personal --region us-east-1 --csv file:///home/node/.aws/tbecker_accessKeys.csv",
+  "postCreateCommand": "mvn clean verify && chown -R vscode:vscode /home/vscode && aws configure import --profile personal --region us-east-1 --csv file:///home/vscode/.aws/tbecker_accessKeys.csv",
   "remoteUser": "vscode",
   "remoteEnv": {
     "AWS_PROFILE": "personal",
