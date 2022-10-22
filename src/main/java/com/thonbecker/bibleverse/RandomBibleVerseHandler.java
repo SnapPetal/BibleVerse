@@ -3,12 +3,14 @@ package com.thonbecker.bibleverse;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thonbecker.bibleverse.model.RandomBibleVerseResponse;
 import java.io.*;
 import java.util.Random;
 import java.util.function.Supplier;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,7 +34,7 @@ public class RandomBibleVerseHandler implements Supplier<String> {
   private AmazonS3 s3client =
       AmazonS3ClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
 
-  private String getRandomVerse(String bookData) {
+  private String getRandomVerse(String bookData) throws JsonProcessingException {
     JSONObject bookObject = new JSONObject(bookData);
 
     // Lookup random chapter from the book
@@ -45,19 +47,16 @@ public class RandomBibleVerseHandler implements Supplier<String> {
     int randomVerseIndex = this.getRandomNumber(randomVerseArray.length());
     JSONObject randomVerseObject = randomVerseArray.getJSONObject(randomVerseIndex - 1);
 
-    // Create JSON object
-    return new JSONStringer()
-        .object()
-        .key("book")
-        .value(bookObject.getString("book"))
-        .key("chapter")
-        .value(randomChapterObject.getString("chapter"))
-        .key("verse")
-        .value(randomVerseObject.getString("verse"))
-        .key("text")
-        .value(randomVerseObject.getString("text"))
-        .endObject()
-        .toString();
+    RandomBibleVerseResponse randomBibleVerseResponse =
+        RandomBibleVerseResponse.builder()
+            .book(bookObject.getString("book"))
+            .chapter(randomChapterObject.getString("chapter"))
+            .verse(randomVerseObject.getString("verse"))
+            .text(randomVerseObject.getString("text"))
+            .build();
+
+    ObjectMapper mapper = new ObjectMapper();
+    return mapper.writeValueAsString(randomBibleVerseResponse);
   }
 
   private String getRandomBook(String booksData) {
