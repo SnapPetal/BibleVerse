@@ -1,38 +1,36 @@
 package com.thonbecker.bibleverse;
 
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thonbecker.bibleverse.model.RandomBibleVerseResponse;
+import com.thonbecker.bibleverse.service.FileService;
 import java.io.*;
 import java.util.Random;
 import java.util.function.Supplier;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RandomBibleVerseHandler implements Supplier<String> {
+  @Autowired private FileService fileService;
+
   @Override
   public String get() {
     try {
-      InputStream booksInputStream = this.getFile("kjv/Books.json");
-      String booksData = this.getAsString(booksInputStream);
+      InputStream booksInputStream = fileService.getFile("kjv/Books.json");
+      String booksData = fileService.getFileAsString(booksInputStream);
 
       String book = this.getRandomBook(booksData);
-      InputStream bookInputStream = this.getFile(String.format("kjv/%s", book));
-      String bookData = this.getAsString(bookInputStream);
+      InputStream bookInputStream = fileService.getFile(String.format("kjv/%s", book));
+      String bookData = fileService.getFileAsString(bookInputStream);
 
       return this.getRandomVerse(bookData);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
   }
-
-  private AmazonS3 s3client =
-      AmazonS3ClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
 
   private String getRandomVerse(String bookData) throws JsonProcessingException {
     JSONObject bookObject = new JSONObject(bookData);
@@ -64,23 +62,6 @@ public class RandomBibleVerseHandler implements Supplier<String> {
     JSONArray filesArray = booksObject.getJSONArray("files");
     int randomIndex = this.getRandomNumber(filesArray.length());
     return filesArray.getString(randomIndex - 1);
-  }
-
-  private InputStream getFile(String fileName) {
-    return s3client.getObject("bible-verse-data-files", fileName).getObjectContent();
-  }
-
-  private String getAsString(InputStream is) throws IOException {
-    if (is == null) return "";
-    StringBuilder sb = new StringBuilder();
-    try (is) {
-      BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-      String line;
-      while ((line = reader.readLine()) != null) {
-        sb.append(line);
-      }
-    }
-    return sb.toString();
   }
 
   private int getRandomNumber(int max) {
