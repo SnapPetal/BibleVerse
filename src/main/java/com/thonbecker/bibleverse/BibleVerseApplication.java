@@ -8,9 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.util.ObjectUtils;
 
 @SpringBootApplication
+@slf4j
 public class BibleVerseApplication {
-  private static final Log logger = LogFactory.getLog(BibleVerseApplication.class);
-
   public static void main(String[] args) {
     logger.info("==> Starting: BibleVerseApplication");
     if (!ObjectUtils.isEmpty(args)) {
