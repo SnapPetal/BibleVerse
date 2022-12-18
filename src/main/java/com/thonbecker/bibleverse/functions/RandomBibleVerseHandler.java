@@ -1,4 +1,4 @@
-package com.thonbecker.bibleverse;
+package com.thonbecker.bibleverse.functions;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
