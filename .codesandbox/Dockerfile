@@ -1,5 +1,5 @@
 # Base image
-FROM node:16
+FROM node:16-alpine
 
 # Install Java 17
 RUN apt-get update && \
