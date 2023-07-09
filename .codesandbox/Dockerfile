@@ -10,3 +10,6 @@ RUN apk add --no-cache \
 
 # Set the default shell to Zsh
 SHELL ["/bin/zsh", "-c"]
+
+# Set the PATH environment variable to include yarn
+ENV PATH="${PATH}:/app/node_modules/.bin"
