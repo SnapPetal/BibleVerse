@@ -1,19 +1,17 @@
 FROM amazoncorretto:17
 
-RUN yum install -y tar which gzip # TODO remove
+# Install Zsh
+RUN yum update -y && \
+    yum install -y zsh && \
+    chsh -s /usr/bin/zsh
 
-# common for all images
-ENV MAVEN_HOME /usr/share/maven
+# Install Yarn
+RUN curl -sL https://dl.yarnpkg.com/rpm/yarn.repo -o /etc/yum.repos.d/yarn.repo && \
+    yum install -y yarn
 
-COPY --from=maven:3.9.3-eclipse-temurin-11 ${MAVEN_HOME} ${MAVEN_HOME}
-COPY --from=maven:3.9.3-eclipse-temurin-11 /usr/local/bin/mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
-COPY --from=maven:3.9.3-eclipse-temurin-11 /usr/share/maven/ref/settings-docker.xml /usr/share/maven/ref/settings-docker.xml
+# Install Node.js 16
+RUN curl -sL https://rpm.nodesource.com/setup_16.x | bash - && \
+    yum install -y nodejs
 
-RUN ln -s ${MAVEN_HOME}/bin/mvn /usr/bin/mvn
-
-ARG MAVEN_VERSION=3.9.3
-ARG USER_HOME_DIR="/root"
-ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
-
-ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh"]
-CMD ["mvn"]
+# Set Zsh as the default shell
+SHELL ["/usr/bin/zsh", "-c"]
