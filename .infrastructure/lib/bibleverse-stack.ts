@@ -26,7 +26,7 @@ export class BibleVerseStack extends Stack {
     const domainName = 'bibleverse.thonbecker.com';
 
     const aboutFunction = new lambda.Function(this, 'AboutFunction', {
-      runtime: lambda.Runtime.JAVA_11,
+      runtime: lambda.Runtime.JAVA_17,
       memorySize: 1024,
       logRetention: RetentionDays.THREE_DAYS,
       handler: 'org.springframework.cloud.function.adapter.aws.FunctionInvoker',
@@ -37,7 +37,7 @@ export class BibleVerseStack extends Stack {
     });
 
     const randomBibleVerseFunction = new lambda.Function(this, 'RandomBibleVerseFunction', {
-      runtime: lambda.Runtime.JAVA_11,
+      runtime: lambda.Runtime.JAVA_17,
       memorySize: 1024,
       logRetention: RetentionDays.THREE_DAYS,
       handler: 'org.springframework.cloud.function.adapter.aws.FunctionInvoker',
