@@ -1,0 +1,17 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "extensions": [
+    // List any VS Code extensions you want installed inside the container.
+    // For Java development, you might consider "vscjava.vscode-java-pack" extension pack.
+  ],
+  "settings": {
+    "java.home": "/usr/lib/jvm/java-17-openjdk-amd64",
+    "java.configuration.runtimes": [
+      {
+        "name": "Java 17",
+        "path": "/usr/lib/jvm/java-17-openjdk-amd64"
+      }
+    ]
+  },
+  "postCreateCommand": "java --version"
+}
