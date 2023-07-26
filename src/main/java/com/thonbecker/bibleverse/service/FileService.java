@@ -8,17 +8,25 @@ import org.springframework.stereotype.Service;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 
 @Service
 public class FileService {
-  private final S3Client s3Client =
-      S3Client.builder()
-          .region(Region.US_EAST_1)
-          .credentialsProvider(DefaultCredentialsProvider.create())
-          .build();
+
+  private S3Client s3Client;
+
+  public void FileService() {
+    this.s3Client =
+        S3Client.builder()
+            .region(Region.US_EAST_1)
+            .credentialsProvider(DefaultCredentialsProvider.create())
+            .build();
+  }
 
   public InputStream getFile(String fileName) {
-    return s3client.getObject("bible-verse-data-files", fileName).getObjectContent();
+    GetObjectRequest objectRequest =
+        GetObjectRequest.builder().key(fileName).bucket("bible-verse-data-files").build();
+    return this.s3Client.getObject(objectRequest);
   }
 
   public String getFileAsString(InputStream is) throws IOException {
