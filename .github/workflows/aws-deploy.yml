@@ -15,7 +15,7 @@ jobs:
           java-version: '17'
           cache: 'maven'
       - name: Build with Maven
-          run: mvn clean verify
+        run: mvn clean verify
       - uses: actions/setup-node@v2
         with:
           node-version: "16"
