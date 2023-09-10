@@ -40,7 +40,9 @@ export class BibleVerseStack extends Stack {
     const randomBibleVerseFunction = new lambda.Function(this, 'RandomBibleVerseFunction', {
       runtime: lambda.Runtime.JAVA_17,
       memorySize: 1024,
+      timeout: Duration.seconds(30),
       logRetention: RetentionDays.THREE_DAYS,
+      snapStart: lambda.SnapStartConf.ON_PUBLISHED_VERSIONS,
       handler: 'org.springframework.cloud.function.adapter.aws.FunctionInvoker',
       code: lambda.Code.fromAsset('../target/bibleverse-2.0.0-aws.jar'),
       environment: {
