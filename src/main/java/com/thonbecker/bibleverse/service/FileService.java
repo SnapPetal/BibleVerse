@@ -13,10 +13,11 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 @Service
 public class FileService {
 
-  private S3Client s3Client = S3Client.builder()
-            .region(Region.US_EAST_1)
-            .credentialsProvider(DefaultCredentialsProvider.create())
-            .build();
+  private S3Client s3Client =
+      S3Client.builder()
+          .region(Region.US_EAST_1)
+          .credentialsProvider(DefaultCredentialsProvider.create())
+          .build();
 
   public InputStream getFile(String fileName) {
     GetObjectRequest objectRequest =
