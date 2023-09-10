@@ -12,4 +12,5 @@ public class RandomBibleVerseResponse {
   private String chapter;
   private String verse;
   private String text;
+  private String lemma;
 }

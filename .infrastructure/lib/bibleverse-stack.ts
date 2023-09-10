@@ -1,4 +1,4 @@
-import { Stack, StackProps, RemovalPolicy, } from 'aws-cdk-lib';
+import { Stack, StackProps, RemovalPolicy, Duration, } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment';
@@ -28,6 +28,7 @@ export class BibleVerseStack extends Stack {
     const aboutFunction = new lambda.Function(this, 'AboutFunction', {
       runtime: lambda.Runtime.JAVA_17,
       memorySize: 1024,
+      timeout: Duration.seconds(30),
       logRetention: RetentionDays.THREE_DAYS,
       handler: 'org.springframework.cloud.function.adapter.aws.FunctionInvoker',
       code: lambda.Code.fromAsset('../target/bibleverse-2.0.0-aws.jar'),
