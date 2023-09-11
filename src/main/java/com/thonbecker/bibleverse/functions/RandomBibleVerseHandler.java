@@ -6,6 +6,8 @@ import com.thonbecker.bibleverse.model.BookData;
 import com.thonbecker.bibleverse.model.RandomBibleVerseResponse;
 import com.thonbecker.bibleverse.service.FileService;
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +45,7 @@ public class RandomBibleVerseHandler implements Supplier<String> {
       throws JsonProcessingException {
     JSONObject bookObject = new JSONObject(bookFileData);
     JSONObject lemmaObject = new JSONObject(lemmaFileData);
+    Map<String, String> verseText = new HashMap<>();
 
     // Lookup random chapter from the book
     JSONArray chaptersArray = bookObject.getJSONArray("chapters");
@@ -53,15 +56,16 @@ public class RandomBibleVerseHandler implements Supplier<String> {
     JSONArray randomVerseArray = randomChapterObject.getJSONArray("verses");
     int randomVerseIndex = this.getRandomNumber(randomVerseArray.length());
     JSONObject randomVerseObject = randomVerseArray.getJSONObject(randomVerseIndex - 1);
+    verseText.put("KJV", randomVerseObject.getString("text"));
 
     // Lookup lemma data
-    String lemmaVerse = null;
     if (lemmaObject.has(bookData.getName())) {
-      lemmaVerse =
+      verseText.put(
+          "SBLGNT",
           lemmaObject
               .getJSONObject(bookData.getName())
               .getJSONObject(randomChapterObject.getString("chapter"))
-              .getString(randomVerseObject.getString("verse"));
+              .getString(randomVerseObject.getString("verse")));
     } else {
       log.info("No data found for book: {}", bookData.getFileName());
     }
@@ -71,8 +75,7 @@ public class RandomBibleVerseHandler implements Supplier<String> {
             .book(bookData.getName())
             .chapter(randomChapterObject.getString("chapter"))
             .verse(randomVerseObject.getString("verse"))
-            .text(randomVerseObject.getString("text"))
-            .lemma(lemmaVerse)
+            .text(verseText)
             .build();
 
     ObjectMapper mapper = new ObjectMapper();
