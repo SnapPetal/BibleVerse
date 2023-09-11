@@ -11,5 +11,5 @@ import lombok.ToString;
 @AllArgsConstructor
 public class BookData {
   private String name;
-  private String file;
+  private String fileName;
 }

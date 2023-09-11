@@ -30,7 +30,7 @@ public class RandomBibleVerseHandler implements Supplier<String> {
 
       BookData bookData = this.getRandomBook(booksFileData);
       InputStream bookInputStream =
-          fileService.getFile(String.format("kjv/%s", bookData.getFile()));
+          fileService.getFile(String.format("kjv/%s", bookData.getFileName()));
       String bookFileData = fileService.getFileAsString(bookInputStream);
 
       return this.getRandomVerse(bookData, bookFileData, lemmaFileData);
@@ -57,11 +57,13 @@ public class RandomBibleVerseHandler implements Supplier<String> {
     // Lookup lemma data
     String lemmaVerse = null;
     if (lemmaObject.has(bookData.getName())) {
-      JSONArray lemmaBookArray = lemmaObject.getJSONArray(bookData.getName());
-      JSONArray lemmaChapterObject = lemmaBookArray.getJSONArray(randomChapterIndex - 1);
-      lemmaVerse = lemmaChapterObject.getString(randomVerseIndex - 1);
+      lemmaVerse =
+          lemmaObject
+              .getJSONObject(bookData.getName())
+              .getJSONObject(randomChapterObject.getString("chapter"))
+              .getString(randomVerseObject.getString("verse"));
     } else {
-      log.info("No data found for book: {}", bookData.getFile());
+      log.info("No data found for book: {}", bookData.getFileName());
     }
 
     RandomBibleVerseResponse randomBibleVerseResponse =
