@@ -2,6 +2,7 @@ package com.thonbecker.bibleverse.functions;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thonbecker.bibleverse.model.BookData;
 import com.thonbecker.bibleverse.model.RandomBibleVerseResponse;
 import com.thonbecker.bibleverse.service.FileService;
 import java.io.*;
@@ -22,24 +23,26 @@ public class RandomBibleVerseHandler implements Supplier<String> {
   public String get() {
     try {
       InputStream booksInputStream = fileService.getFile("kjv/Books.json");
-      String booksData = fileService.getFileAsString(booksInputStream);
+      String booksFileData = fileService.getFileAsString(booksInputStream);
 
       InputStream lemmaInputStream = fileService.getFile("lemma/bible.json");
-      String lemmaData = fileService.getFileAsString(lemmaInputStream);
+      String lemmaFileData = fileService.getFileAsString(lemmaInputStream);
 
-      String book = this.getRandomBook(booksData);
-      InputStream bookInputStream = fileService.getFile(String.format("kjv/%s", book));
-      String bookData = fileService.getFileAsString(bookInputStream);
+      BookData bookData = this.getRandomBook(booksFileData);
+      InputStream bookInputStream =
+          fileService.getFile(String.format("kjv/%s", bookData.getFile()));
+      String bookFileData = fileService.getFileAsString(bookInputStream);
 
-      return this.getRandomVerse(bookData, lemmaData);
+      return this.getRandomVerse(bookData, bookFileData, lemmaFileData);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
   }
 
-  private String getRandomVerse(String bookData, String lemmaData) throws JsonProcessingException {
-    JSONObject bookObject = new JSONObject(bookData);
-    JSONObject lemmaObject = new JSONObject(lemmaData);
+  private String getRandomVerse(BookData bookData, String bookFileData, String lemmaFileData)
+      throws JsonProcessingException {
+    JSONObject bookObject = new JSONObject(bookFileData);
+    JSONObject lemmaObject = new JSONObject(lemmaFileData);
 
     // Lookup random chapter from the book
     JSONArray chaptersArray = bookObject.getJSONArray("chapters");
@@ -53,17 +56,17 @@ public class RandomBibleVerseHandler implements Supplier<String> {
 
     // Lookup lemma data
     String lemmaVerse = null;
-    if (lemmaObject.has(bookObject.getString("book"))) {
-      JSONArray lemmaBookArray = lemmaObject.getJSONArray(bookObject.getString("book"));
+    if (lemmaObject.has(bookData.getName())) {
+      JSONArray lemmaBookArray = lemmaObject.getJSONArray(bookData.getName());
       JSONArray lemmaChapterObject = lemmaBookArray.getJSONArray(randomChapterIndex - 1);
       lemmaVerse = lemmaChapterObject.getString(randomVerseIndex - 1);
     } else {
-      log.info("No data found for book: {}", bookObject.getString("book"));
+      log.info("No data found for book: {}", bookData.getFile());
     }
 
     RandomBibleVerseResponse randomBibleVerseResponse =
         RandomBibleVerseResponse.builder()
-            .book(bookObject.getString("book"))
+            .book(bookData.getName())
             .chapter(randomChapterObject.getString("chapter"))
             .verse(randomVerseObject.getString("verse"))
             .text(randomVerseObject.getString("text"))
@@ -74,11 +77,13 @@ public class RandomBibleVerseHandler implements Supplier<String> {
     return mapper.writeValueAsString(randomBibleVerseResponse);
   }
 
-  private String getRandomBook(String booksData) {
+  private BookData getRandomBook(String booksData) {
     JSONObject booksObject = new JSONObject(booksData);
+    JSONArray bookNameArray = booksObject.getJSONArray("names");
     JSONArray filesArray = booksObject.getJSONArray("files");
     int randomIndex = this.getRandomNumber(filesArray.length());
-    return filesArray.getString(randomIndex - 1);
+    return new BookData(
+        bookNameArray.getString(randomIndex - 1), filesArray.getString(randomIndex - 1));
   }
 
   private int getRandomNumber(int max) {
