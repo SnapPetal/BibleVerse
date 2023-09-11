@@ -82,6 +82,7 @@ public class RandomBibleVerseHandler implements Supplier<String> {
     JSONArray bookNameArray = booksObject.getJSONArray("names");
     JSONArray filesArray = booksObject.getJSONArray("files");
     int randomIndex = this.getRandomNumber(filesArray.length());
+    log.info("Random index is: {}", randomIndex);
     return new BookData(
         bookNameArray.getString(randomIndex - 1), filesArray.getString(randomIndex - 1));
   }
