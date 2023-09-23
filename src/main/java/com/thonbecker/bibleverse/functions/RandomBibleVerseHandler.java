@@ -18,11 +18,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class RandomBibleVerseHandler implements Supplier<String> {
+public class RandomBibleVerseHandler implements Supplier<RandomBibleVerseResponse> {
   @Autowired private FileService fileService;
 
   @Override
-  public String get() {
+  public RandomBibleVerseResponse get() {
     try {
       InputStream booksInputStream = fileService.getFile("kjv/Books.json");
       String booksFileData = fileService.getFileAsString(booksInputStream);
@@ -41,7 +41,7 @@ public class RandomBibleVerseHandler implements Supplier<String> {
     }
   }
 
-  private String getRandomVerse(BookData bookData, String bookFileData, String lemmaFileData)
+  private RandomBibleVerseResponse getRandomVerse(BookData bookData, String bookFileData, String lemmaFileData)
       throws JsonProcessingException {
     JSONObject bookObject = new JSONObject(bookFileData);
     JSONObject lemmaObject = new JSONObject(lemmaFileData);
