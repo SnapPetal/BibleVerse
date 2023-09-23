@@ -1,7 +1,6 @@
 package com.thonbecker.bibleverse.functions;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thonbecker.bibleverse.model.BookData;
 import com.thonbecker.bibleverse.model.RandomBibleVerseResponse;
 import com.thonbecker.bibleverse.service.FileService;
@@ -41,8 +40,8 @@ public class RandomBibleVerseHandler implements Supplier<RandomBibleVerseRespons
     }
   }
 
-  private RandomBibleVerseResponse getRandomVerse(BookData bookData, String bookFileData, String lemmaFileData)
-      throws JsonProcessingException {
+  private RandomBibleVerseResponse getRandomVerse(
+      BookData bookData, String bookFileData, String lemmaFileData) throws JsonProcessingException {
     JSONObject bookObject = new JSONObject(bookFileData);
     JSONObject lemmaObject = new JSONObject(lemmaFileData);
     Map<String, String> verseText = new HashMap<>();
@@ -70,16 +69,12 @@ public class RandomBibleVerseHandler implements Supplier<RandomBibleVerseRespons
       log.info("No data found for book: {}", bookData.getFileName());
     }
 
-    RandomBibleVerseResponse randomBibleVerseResponse =
-        RandomBibleVerseResponse.builder()
-            .book(bookData.getName())
-            .chapter(randomChapterObject.getString("chapter"))
-            .verse(randomVerseObject.getString("verse"))
-            .text(verseText)
-            .build();
-
-    ObjectMapper mapper = new ObjectMapper();
-    return mapper.writeValueAsString(randomBibleVerseResponse);
+    return RandomBibleVerseResponse.builder()
+        .book(bookData.getName())
+        .chapter(randomChapterObject.getString("chapter"))
+        .verse(randomVerseObject.getString("verse"))
+        .text(verseText)
+        .build();
   }
 
   private BookData getRandomBook(String booksData) {
