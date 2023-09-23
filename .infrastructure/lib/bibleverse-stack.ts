@@ -72,7 +72,7 @@ export class BibleVerseStack extends Stack {
 
     const api = new HttpApi(this, 'HttpApiBibleVerse', {
       corsPreflight: {
-        allowOrigins: ['https://thonbecker.com', 'https://www.thonbecker.com'],
+        allowOrigins: ['http://localhost:3000','https://thonbecker.com', 'https://www.thonbecker.com'],
         allowMethods: [CorsHttpMethod.GET, CorsHttpMethod.OPTIONS],
         allowHeaders: [
           'Content-Type',
