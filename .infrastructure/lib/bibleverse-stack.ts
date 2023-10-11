@@ -17,6 +17,7 @@ import {
 } from '@aws-cdk/aws-apigatewayv2-integrations-alpha';
 import * as path from "path";
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
+import { Cors } from 'aws-cdk-lib/aws-apigateway';
 
 export class BibleVerseStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -72,7 +73,7 @@ export class BibleVerseStack extends Stack {
 
     const api = new HttpApi(this, 'HttpApiBibleVerse', {
       corsPreflight: {
-        allowOrigins: ['http://localhost:3000','https://thonbecker.com', 'https://www.thonbecker.com'],
+        allowOrigins: Cors.ALL_ORIGINS,
         allowMethods: [CorsHttpMethod.GET, CorsHttpMethod.OPTIONS],
         allowHeaders: [
           'Content-Type',
