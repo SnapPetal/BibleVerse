@@ -22,7 +22,7 @@
   "dependencies": {
     "@aws-cdk/aws-apigatewayv2-alpha": "2.104.0-alpha.0",
     "@aws-cdk/aws-apigatewayv2-integrations-alpha": "2.104.0-alpha.0",
-    "aws-cdk-lib": "2.104.0",
+    "aws-cdk-lib": "2.108.1",
     "constructs": "10.3.0",
     "source-map-support": "^0.5.21"
   }
