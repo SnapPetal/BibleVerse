@@ -10,7 +10,7 @@
 			"installGradle": "false"
 		},
 		"ghcr.io/devcontainers/features/node:1": {
-			"version": "v16"
+			"version": "v20"
 		}
 	},
 
