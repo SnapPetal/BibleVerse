@@ -11,10 +11,10 @@ import {
   DomainName,
   HttpMethod,
   CorsHttpMethod,
-} from '@aws-cdk/aws-apigatewayv2-alpha';
+} from 'aws-cdk-lib/aws-apigatewayv2';
 import {
   HttpLambdaIntegration,
-} from '@aws-cdk/aws-apigatewayv2-integrations-alpha';
+} from 'aws-cdk-lib/aws-apigatewayv2-integrations';
 import * as path from "path";
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Cors } from 'aws-cdk-lib/aws-apigateway';
