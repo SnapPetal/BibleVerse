@@ -27,7 +27,7 @@ export class BibleVerseStack extends Stack {
     const domainName = 'bibleverse.thonbecker.com';
 
     const aboutFunction = new lambda.Function(this, 'AboutFunction', {
-      runtime: lambda.Runtime.JAVA_17,
+      runtime: lambda.Runtime.JAVA_21,
       memorySize: 1024,
       timeout: Duration.seconds(30),
       logRetention: RetentionDays.THREE_DAYS,
@@ -39,7 +39,7 @@ export class BibleVerseStack extends Stack {
     });
 
     const randomBibleVerseFunction = new lambda.Function(this, 'RandomBibleVerseFunction', {
-      runtime: lambda.Runtime.JAVA_17,
+      runtime: lambda.Runtime.JAVA_21,
       memorySize: 1024,
       timeout: Duration.seconds(30),
       logRetention: RetentionDays.THREE_DAYS,
