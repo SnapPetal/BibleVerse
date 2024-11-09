@@ -9,8 +9,8 @@ import lombok.ToString;
 @Getter
 @ToString
 public class RandomBibleVerseResponse {
-  private String book;
-  private String chapter;
-  private String verse;
-  private Map<String, String> text;
+    private String book;
+    private String chapter;
+    private String verse;
+    private Map<String, String> text;
 }

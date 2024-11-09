@@ -8,8 +8,8 @@ import lombok.ToString;
 @Getter
 @ToString
 public class AboutResponse {
-  private String status;
-  private String packageName;
-  private String version;
-  private String time;
+    private String status;
+    private String packageName;
+    private String version;
+    private String time;
 }

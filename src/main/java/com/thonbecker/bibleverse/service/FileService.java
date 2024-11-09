@@ -13,28 +13,29 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 @Service
 public class FileService {
 
-  private S3Client s3Client =
-      S3Client.builder()
-          .region(Region.US_EAST_1)
-          .credentialsProvider(DefaultCredentialsProvider.create())
-          .build();
+    private final S3Client s3Client = S3Client.builder()
+            .region(Region.US_EAST_1)
+            .credentialsProvider(DefaultCredentialsProvider.create())
+            .build();
 
-  public InputStream getFile(String fileName) {
-    GetObjectRequest objectRequest =
-        GetObjectRequest.builder().key(fileName).bucket("bible-verse-data-files").build();
-    return this.s3Client.getObject(objectRequest);
-  }
-
-  public String getFileAsString(InputStream is) throws IOException {
-    if (is == null) return "";
-    StringBuilder sb = new StringBuilder();
-    try (is) {
-      BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-      String line;
-      while ((line = reader.readLine()) != null) {
-        sb.append(line);
-      }
+    public InputStream getFile(String fileName) {
+        GetObjectRequest objectRequest = GetObjectRequest.builder()
+                .key(fileName)
+                .bucket("bible-verse-data-files")
+                .build();
+        return this.s3Client.getObject(objectRequest);
     }
-    return sb.toString();
-  }
+
+    public String getFileAsString(InputStream is) throws IOException {
+        if (is == null) return "";
+        StringBuilder sb = new StringBuilder();
+        try (is) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+        }
+        return sb.toString();
+    }
 }

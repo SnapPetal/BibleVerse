@@ -12,24 +12,24 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class AboutHandler implements Supplier<String> {
-  @Autowired BuildProperties buildProperties;
+    @Autowired
+    BuildProperties buildProperties;
 
-  @Override
-  public String get() {
-    AboutResponse aboutResponse =
-        AboutResponse.builder()
-            .status("healthy")
-            .packageName(buildProperties.getName())
-            .version(buildProperties.getVersion())
-            .time(buildProperties.getTime().toString())
-            .build();
+    @Override
+    public String get() {
+        AboutResponse aboutResponse = AboutResponse.builder()
+                .status("healthy")
+                .packageName(buildProperties.getName())
+                .version(buildProperties.getVersion())
+                .time(buildProperties.getTime().toString())
+                .build();
 
-    ObjectMapper mapper = new ObjectMapper();
-    try {
-      return mapper.writeValueAsString(aboutResponse);
-    } catch (JsonProcessingException e) {
-      log.error(e.getMessage());
-      return null;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(aboutResponse);
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+            return null;
+        }
     }
-  }
 }

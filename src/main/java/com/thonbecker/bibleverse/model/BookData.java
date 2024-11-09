@@ -6,6 +6,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class BookData {
-  private String name;
-  private String fileName;
+    private String name;
+    private String fileName;
 }
