@@ -1,9 +1,10 @@
 package com.thonbecker.bibleverse.service;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
@@ -26,16 +27,14 @@ public class FileService {
         return this.s3Client.getObject(objectRequest);
     }
 
-    public String getFileAsString(InputStream is) throws IOException {
-        if (is == null) return "";
-        StringBuilder sb = new StringBuilder();
-        try (is) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
+    public Optional<String> getFileAsString(InputStream is) throws IOException {
+        if (Objects.isNull(is)) {
+            return Optional.empty();
         }
-        return sb.toString();
+        try (is) {
+            return Optional.of(new String(is.readAllBytes(), StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            return Optional.empty();
+        }
     }
 }
