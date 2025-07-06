@@ -24,11 +24,16 @@ public class RandomBibleVerseHandler implements Supplier<RandomBibleVerseRespons
     @Override
     public RandomBibleVerseResponse get() {
         try {
-            String booksFileData = fileService.getFileAsString(fileService.getFile("kjv/Books.json"));
-            String lemmaFileData = fileService.getFileAsString(fileService.getFile("lemma/bible.json"));
+            String booksFileData = fileService
+                    .getFileAsString(fileService.getFile("kjv/Books.json"))
+                    .get();
+            String lemmaFileData = fileService
+                    .getFileAsString(fileService.getFile("lemma/bible.json"))
+                    .get();
             BookData bookData = this.getRandomBook(booksFileData);
-            String bookFileData =
-                    fileService.getFileAsString(fileService.getFile(String.format("kjv/%s", bookData.getFileName())));
+            String bookFileData = fileService
+                    .getFileAsString(fileService.getFile(String.format("kjv/%s", bookData.getFileName())))
+                    .get();
 
             return this.getRandomVerse(bookData, bookFileData, lemmaFileData);
         } catch (IOException e) {
