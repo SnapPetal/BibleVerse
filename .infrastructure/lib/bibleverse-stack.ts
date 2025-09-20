@@ -56,17 +56,11 @@ export class BibleVerseStack extends Stack {
       memorySize: 1024,
       timeout: Duration.seconds(30),
       logGroup: randomBibleVerseFunctionLogGroup,
-      snapStart: lambda.SnapStartConf.ON_PUBLISHED_VERSIONS,
       handler: 'org.springframework.cloud.function.adapter.aws.FunctionInvoker',
       code: lambda.Code.fromAsset('../target/bibleverse-2.0.0-aws.jar'),
       environment: {
         'SPRING_CLOUD_FUNCTION_DEFINITION': 'randomBibleVerseHandler'
       },
-    });
-
-    // Create a version for SnapStart to work properly
-    const randomBibleVerseFunctionVersion = new lambda.Version(this, 'RandomBibleVerseFunctionVersion', {
-      lambda: randomBibleVerseFunction,
     });
 
     const bucket = new s3.Bucket(this, 'BibleVerseBucket', {
