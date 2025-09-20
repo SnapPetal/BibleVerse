@@ -16,8 +16,8 @@ import {
   HttpLambdaIntegration,
 } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
 import * as path from "path";
+import * as logs from 'aws-cdk-lib/aws-logs';
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
-import { Cors } from 'aws-cdk-lib/aws-apigateway';
 
 export class BibleVerseStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -26,11 +26,24 @@ export class BibleVerseStack extends Stack {
     const certArn = 'arn:aws:acm:us-east-1:664759038511:certificate/1554896f-abd0-4a6b-8955-710f2f4a642b';
     const domainName = 'bibleverse.thonbecker.com';
 
+    // Create log groups for Lambda functions
+    const aboutFunctionLogGroup = new logs.LogGroup(this, 'AboutFunctionLogGroup', {
+      logGroupName: '/aws/lambda/BibleVerseStack-AboutFunction',
+      retention: RetentionDays.THREE_DAYS,
+      removalPolicy: RemovalPolicy.DESTROY,
+    });
+
+    const randomBibleVerseFunctionLogGroup = new logs.LogGroup(this, 'RandomBibleVerseFunctionLogGroup', {
+      logGroupName: '/aws/lambda/BibleVerseStack-RandomBibleVerseFunction',
+      retention: RetentionDays.THREE_DAYS,
+      removalPolicy: RemovalPolicy.DESTROY,
+    });
+
     const aboutFunction = new lambda.Function(this, 'AboutFunction', {
       runtime: lambda.Runtime.JAVA_21,
       memorySize: 1024,
       timeout: Duration.seconds(30),
-      logRetention: RetentionDays.THREE_DAYS,
+      logGroup: aboutFunctionLogGroup,
       handler: 'org.springframework.cloud.function.adapter.aws.FunctionInvoker',
       code: lambda.Code.fromAsset('../target/bibleverse-2.0.0-aws.jar'),
       environment: {
@@ -42,13 +55,18 @@ export class BibleVerseStack extends Stack {
       runtime: lambda.Runtime.JAVA_21,
       memorySize: 1024,
       timeout: Duration.seconds(30),
-      logRetention: RetentionDays.THREE_DAYS,
+      logGroup: randomBibleVerseFunctionLogGroup,
       snapStart: lambda.SnapStartConf.ON_PUBLISHED_VERSIONS,
       handler: 'org.springframework.cloud.function.adapter.aws.FunctionInvoker',
       code: lambda.Code.fromAsset('../target/bibleverse-2.0.0-aws.jar'),
       environment: {
         'SPRING_CLOUD_FUNCTION_DEFINITION': 'randomBibleVerseHandler'
       },
+    });
+
+    // Create a version for SnapStart to work properly
+    const randomBibleVerseFunctionVersion = new lambda.Version(this, 'RandomBibleVerseFunctionVersion', {
+      lambda: randomBibleVerseFunction,
     });
 
     const bucket = new s3.Bucket(this, 'BibleVerseBucket', {
@@ -73,7 +91,7 @@ export class BibleVerseStack extends Stack {
 
     const api = new HttpApi(this, 'HttpApiBibleVerse', {
       corsPreflight: {
-        allowOrigins: Cors.ALL_ORIGINS,
+        allowOrigins: ['*'],
         allowMethods: [CorsHttpMethod.GET, CorsHttpMethod.OPTIONS],
         allowHeaders: [
           'Content-Type',
