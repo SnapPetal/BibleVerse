@@ -82,16 +82,7 @@ export class BibleVerseStack extends Stack {
           'Access-Control-Allow-Methods',
         ],
       },
-      defaultIntegration: new HttpLambdaIntegration('DefaultIntegration', randomBibleVerseFunction, {
-        responseParameters: {
-          '200': {
-            'Content-Type': "'application/json'"
-          },
-          '500': {
-            'Content-Type': "'application/json'"
-          }
-        }
-      }),
+      defaultIntegration: new HttpLambdaIntegration('DefaultIntegration', randomBibleVerseFunction),
       defaultDomainMapping: {
         domainName: dn,
       },
@@ -100,16 +91,7 @@ export class BibleVerseStack extends Stack {
     api.addRoutes({
       path: '/about',
       methods: [HttpMethod.GET],
-      integration: new HttpLambdaIntegration('AboutIntegration', aboutFunction, {
-        responseParameters: {
-          '200': {
-            'Content-Type': "'application/json'"
-          },
-          '500': {
-            'Content-Type': "'application/json'"
-          }
-        }
-      })
+      integration: new HttpLambdaIntegration('AboutIntegration', aboutFunction)
     });
 
     new route53.ARecord(this, 'AliasBibleVerse', {
