@@ -1,6 +1,5 @@
 package com.thonbecker.bibleverse.functions;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thonbecker.bibleverse.model.BookData;
 import com.thonbecker.bibleverse.model.RandomBibleVerseResponse;
 import com.thonbecker.bibleverse.service.FileService;
@@ -26,14 +25,14 @@ public class RandomBibleVerseHandler implements Supplier<RandomBibleVerseRespons
         try {
             String booksFileData = fileService
                     .getFileAsString(fileService.getFile("kjv/Books.json"))
-                    .get();
+                    .orElseThrow();
             String lemmaFileData = fileService
                     .getFileAsString(fileService.getFile("lemma/bible.json"))
-                    .get();
+                    .orElseThrow();
             BookData bookData = this.getRandomBook(booksFileData);
             String bookFileData = fileService
                     .getFileAsString(fileService.getFile(String.format("kjv/%s", bookData.getFileName())))
-                    .get();
+                    .orElseThrow();
 
             return this.getRandomVerse(bookData, bookFileData, lemmaFileData);
         } catch (IOException e) {
@@ -41,17 +40,16 @@ public class RandomBibleVerseHandler implements Supplier<RandomBibleVerseRespons
         }
     }
 
-    private RandomBibleVerseResponse getRandomVerse(BookData bookData, String bookFileData, String lemmaFileData)
-            throws JsonProcessingException {
+    private RandomBibleVerseResponse getRandomVerse(BookData bookData, String bookFileData, String lemmaFileData) {
         JSONObject bookObject = new JSONObject(bookFileData);
         JSONObject lemmaObject = new JSONObject(lemmaFileData);
         Map<String, String> verseText = new HashMap<>();
 
-        // Lookup random chapter from the book
+        // Look up random chapter from the book
         JSONArray chaptersArray = bookObject.getJSONArray("chapters");
         JSONObject randomChapterObject = chaptersArray.getJSONObject(getRandomNumber(chaptersArray.length()) - 1);
 
-        // Lookup random verse from the chapter
+        // Look up random verse from the chapter
         JSONArray randomVerseArray = randomChapterObject.getJSONArray("verses");
         JSONObject randomVerseObject = randomVerseArray.getJSONObject(getRandomNumber(randomVerseArray.length()) - 1);
         verseText.put("KJV", randomVerseObject.getString("text"));

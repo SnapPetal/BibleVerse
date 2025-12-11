@@ -40,7 +40,7 @@ export class BibleVerseStack extends Stack {
     });
 
     const aboutFunction = new lambda.Function(this, 'AboutFunction', {
-      runtime: lambda.Runtime.JAVA_21,
+      runtime: lambda.Runtime.JAVA_25,
       memorySize: 1024,
       timeout: Duration.seconds(30),
       logGroup: aboutFunctionLogGroup,
@@ -52,7 +52,7 @@ export class BibleVerseStack extends Stack {
     });
 
     const randomBibleVerseFunction = new lambda.Function(this, 'RandomBibleVerseFunction', {
-      runtime: lambda.Runtime.JAVA_21,
+      runtime: lambda.Runtime.JAVA_25,
       memorySize: 1024,
       timeout: Duration.seconds(30),
       logGroup: randomBibleVerseFunctionLogGroup,

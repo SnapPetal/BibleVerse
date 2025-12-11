@@ -37,6 +37,7 @@ BibleVerse is a cloud-native application that provides simple API endpoints to f
 ## API Endpoints
 
 ### Base URL
+
 ```
 https://bibleverse.thonbecker.com
 ```
@@ -44,11 +45,13 @@ https://bibleverse.thonbecker.com
 ### Endpoints
 
 #### 1. Random Bible Verse
+
 **GET** `/`
 
 Returns a random Bible verse with both KJV and SBLGNT text.
 
 **Response:**
+
 ```json
 {
   "book": "John",
@@ -62,11 +65,13 @@ Returns a random Bible verse with both KJV and SBLGNT text.
 ```
 
 #### 2. Health Check
+
 **GET** `/about`
 
 Returns service health information and build details.
 
 **Response:**
+
 ```json
 {
   "status": "healthy",
@@ -77,6 +82,7 @@ Returns service health information and build details.
 ```
 
 ### Response Headers
+
 All endpoints return:
 - `Content-Type: application/json`
 - `Access-Control-Allow-Origin: *`
@@ -96,22 +102,23 @@ All endpoints return:
 ### Local Development
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd BibleVerse
    ```
-
 2. **Configure AWS credentials**
+
    ```bash
    aws configure
    ```
-
 3. **Build the application**
+
    ```bash
    mvn clean package
    ```
-
 4. **Synthesize CDK template**
+
    ```bash
    cd .infrastructure
    npm install
@@ -121,12 +128,13 @@ All endpoints return:
 ### Deployment
 
 1. **Deploy to AWS**
+
    ```bash
    cd .infrastructure
    cdk deploy
    ```
-
 2. **Verify deployment**
+
    ```bash
    curl https://bibleverse.thonbecker.com/about
    ```
@@ -172,6 +180,7 @@ BibleVerse/
 ### Testing
 
 Run the test suite:
+
 ```bash
 mvn test
 ```
@@ -179,6 +188,7 @@ mvn test
 ### Code Formatting
 
 Format code using Spotless:
+
 ```bash
 mvn spotless:apply
 ```
