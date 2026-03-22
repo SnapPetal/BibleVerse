@@ -5,18 +5,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Build & Development Commands
 
 ### Java (from project root)
+
 - `mvn clean verify` — build, test, and package (CI uses this)
 - `mvn spotless:apply` — auto-format Java, POM, JS, and Markdown (Palantir Java format)
 - `mvn test -Dtest=BibleVerseApplicationTests#methodName` — run a single test
 - Output artifact: `target/bibleverse-2.0.0-aws.jar` (shaded JAR referenced by CDK)
 
 ### CDK Infrastructure (from `.infrastructure/`)
+
 - `yarn install && yarn cdk synth` — synthesize CloudFormation
 - `yarn cdk deploy --all` — deploy to AWS
 - `yarn cdk diff` — preview changes
 - `npm run test` — run CDK Jest tests
 
 ### Toolchain
+
 Managed via `.tool-versions` (asdf): Java Corretto 25, Maven 3.9.14, Node.js 24.
 
 ## Architecture
