@@ -64,6 +64,12 @@ export class BibleVerseStack extends Stack {
       },
     });
 
+    const randomBibleVerseVersion = randomBibleVerseFunction.currentVersion;
+    const randomBibleVerseAlias = new lambda.Alias(this, 'RandomBibleVerseLive', {
+      aliasName: 'live',
+      version: randomBibleVerseVersion,
+    });
+
     const bucket = new s3.Bucket(this, 'BibleVerseBucket', {
       bucketName: 'bible-verse-data-files',
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
@@ -78,7 +84,8 @@ export class BibleVerseStack extends Stack {
     });
 
     deployment.deployedBucket.grantRead(randomBibleVerseFunction);
-    
+    deployment.deployedBucket.grantRead(randomBibleVerseAlias);
+
     const dn = new DomainName(this, 'DomainNameBibleVerse', {
       domainName,
       certificate: acm.Certificate.fromCertificateArn(this, 'CertificateBibleVerse', certArn),
@@ -95,7 +102,7 @@ export class BibleVerseStack extends Stack {
           'Access-Control-Allow-Methods',
         ],
       },
-      defaultIntegration: new HttpLambdaIntegration('DefaultIntegration', randomBibleVerseFunction),
+      defaultIntegration: new HttpLambdaIntegration('DefaultIntegration', randomBibleVerseAlias),
       defaultDomainMapping: {
         domainName: dn,
       },
