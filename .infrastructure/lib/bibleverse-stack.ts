@@ -1,4 +1,4 @@
-import { Stack, StackProps, RemovalPolicy, Duration, } from 'aws-cdk-lib';
+import { Stack, StackProps, RemovalPolicy, Duration, Annotations } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment';
@@ -64,6 +64,7 @@ export class BibleVerseStack extends Stack {
       },
     });
 
+    Annotations.of(randomBibleVerseFunction).acknowledgeWarning('@aws-cdk/aws-lambda:snapStartRequirePublish');
     const randomBibleVerseVersion = randomBibleVerseFunction.currentVersion;
     const randomBibleVerseAlias = new lambda.Alias(this, 'RandomBibleVerseLive', {
       aliasName: 'live',
