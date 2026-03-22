@@ -170,6 +170,9 @@ public class RandomBibleVerseHandler implements Supplier<RandomBibleVerseRespons
     }
 
     private int getRandomNumber(int max) {
+        if (max <= 1) {
+            return 1;
+        }
         return new Random().ints(1, max).findFirst().orElseThrow(IllegalArgumentException::new);
     }
 }
