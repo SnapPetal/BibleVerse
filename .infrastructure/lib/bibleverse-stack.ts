@@ -41,7 +41,7 @@ export class BibleVerseStack extends Stack {
 
     const aboutFunction = new lambda.Function(this, 'AboutFunction', {
       runtime: lambda.Runtime.JAVA_25,
-      memorySize: 512,
+      memorySize: 1024,
       timeout: Duration.seconds(30),
       snapStart: lambda.SnapStartConf.ON_PUBLISHED_VERSIONS,
       logGroup: aboutFunctionLogGroup,
@@ -92,6 +92,7 @@ export class BibleVerseStack extends Stack {
       destinationBucket: bucket,
     });
 
+    deployment.deployedBucket.grantRead(aboutFunction);
     deployment.deployedBucket.grantRead(randomBibleVerseFunction);
 
     const dn = new DomainName(this, 'DomainNameBibleVerse', {
