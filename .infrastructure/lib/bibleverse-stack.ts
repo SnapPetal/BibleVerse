@@ -41,14 +41,22 @@ export class BibleVerseStack extends Stack {
 
     const aboutFunction = new lambda.Function(this, 'AboutFunction', {
       runtime: lambda.Runtime.JAVA_25,
-      memorySize: 1024,
+      memorySize: 512,
       timeout: Duration.seconds(30),
+      snapStart: lambda.SnapStartConf.ON_PUBLISHED_VERSIONS,
       logGroup: aboutFunctionLogGroup,
       handler: 'org.springframework.cloud.function.adapter.aws.FunctionInvoker',
       code: lambda.Code.fromAsset('../target/bibleverse-2.0.0-aws.jar'),
       environment: {
         'SPRING_CLOUD_FUNCTION_DEFINITION': 'aboutHandler'
       },
+    });
+
+    Annotations.of(aboutFunction).acknowledgeWarning('@aws-cdk/aws-lambda:snapStartRequirePublish');
+    const aboutVersion = aboutFunction.currentVersion;
+    const aboutAlias = new lambda.Alias(this, 'AboutFunctionLive', {
+      aliasName: 'live',
+      version: aboutVersion,
     });
 
     const randomBibleVerseFunction = new lambda.Function(this, 'RandomBibleVerseFunction', {
@@ -85,7 +93,6 @@ export class BibleVerseStack extends Stack {
     });
 
     deployment.deployedBucket.grantRead(randomBibleVerseFunction);
-    deployment.deployedBucket.grantRead(randomBibleVerseAlias);
 
     const dn = new DomainName(this, 'DomainNameBibleVerse', {
       domainName,
@@ -112,7 +119,7 @@ export class BibleVerseStack extends Stack {
     api.addRoutes({
       path: '/about',
       methods: [HttpMethod.GET],
-      integration: new HttpLambdaIntegration('AboutIntegration', aboutFunction)
+      integration: new HttpLambdaIntegration('AboutIntegration', aboutAlias)
     });
 
     new route53.ARecord(this, 'AliasBibleVerse', {
