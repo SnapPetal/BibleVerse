@@ -55,6 +55,7 @@ export class BibleVerseStack extends Stack {
       runtime: lambda.Runtime.JAVA_25,
       memorySize: 1024,
       timeout: Duration.seconds(30),
+      snapStart: lambda.SnapStartConf.ON_PUBLISHED_VERSIONS,
       logGroup: randomBibleVerseFunctionLogGroup,
       handler: 'org.springframework.cloud.function.adapter.aws.FunctionInvoker',
       code: lambda.Code.fromAsset('../target/bibleverse-2.0.0-aws.jar'),

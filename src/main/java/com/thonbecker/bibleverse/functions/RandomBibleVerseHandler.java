@@ -1,86 +1,172 @@
 package com.thonbecker.bibleverse.functions;
 
-import com.thonbecker.bibleverse.model.BookData;
 import com.thonbecker.bibleverse.model.RandomBibleVerseResponse;
 import com.thonbecker.bibleverse.service.FileService;
 import java.io.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
-import lombok.RequiredArgsConstructor;
+import javax.xml.parsers.DocumentBuilderFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 @Component
 @Slf4j
-@RequiredArgsConstructor
 public class RandomBibleVerseHandler implements Supplier<RandomBibleVerseResponse> {
-    private final FileService fileService;
+    private final Document csbDoc;
+    private final Document greekDoc;
+
+    private static final List<String> BOOK_NAMES = List.of(
+            "Genesis",
+            "Exodus",
+            "Leviticus",
+            "Numbers",
+            "Deuteronomy",
+            "Joshua",
+            "Judges",
+            "Ruth",
+            "1 Samuel",
+            "2 Samuel",
+            "1 Kings",
+            "2 Kings",
+            "1 Chronicles",
+            "2 Chronicles",
+            "Ezra",
+            "Nehemiah",
+            "Esther",
+            "Job",
+            "Psalms",
+            "Proverbs",
+            "Ecclesiastes",
+            "Song of Solomon",
+            "Isaiah",
+            "Jeremiah",
+            "Lamentations",
+            "Ezekiel",
+            "Daniel",
+            "Hosea",
+            "Joel",
+            "Amos",
+            "Obadiah",
+            "Jonah",
+            "Micah",
+            "Nahum",
+            "Habakkuk",
+            "Zephaniah",
+            "Haggai",
+            "Zechariah",
+            "Malachi",
+            "Matthew",
+            "Mark",
+            "Luke",
+            "John",
+            "Acts",
+            "Romans",
+            "1 Corinthians",
+            "2 Corinthians",
+            "Galatians",
+            "Ephesians",
+            "Philippians",
+            "Colossians",
+            "1 Thessalonians",
+            "2 Thessalonians",
+            "1 Timothy",
+            "2 Timothy",
+            "Titus",
+            "Philemon",
+            "Hebrews",
+            "James",
+            "1 Peter",
+            "2 Peter",
+            "1 John",
+            "2 John",
+            "3 John",
+            "Jude",
+            "Revelation");
+
+    public RandomBibleVerseHandler(FileService fileService) {
+        try {
+            this.csbDoc = parseXml(fileService.getFile("csb/bible.xml"));
+            this.greekDoc = parseXml(fileService.getFile("greek/bible.xml"));
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load Bible XML data", e);
+        }
+    }
 
     @Override
     public RandomBibleVerseResponse get() {
-        try {
-            String booksFileData = fileService
-                    .getFileAsString(fileService.getFile("kjv/Books.json"))
-                    .orElseThrow();
-            String lemmaFileData = fileService
-                    .getFileAsString(fileService.getFile("lemma/bible.json"))
-                    .orElseThrow();
-            BookData bookData = this.getRandomBook(booksFileData);
-            String bookFileData = fileService
-                    .getFileAsString(fileService.getFile(String.format("kjv/%s", bookData.getFileName())))
-                    .orElseThrow();
+        return getRandomVerse();
+    }
 
-            return this.getRandomVerse(bookData, bookFileData, lemmaFileData);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    private Document parseXml(InputStream is) throws Exception {
+        try (is) {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            return factory.newDocumentBuilder().parse(is);
         }
     }
 
-    private RandomBibleVerseResponse getRandomVerse(BookData bookData, String bookFileData, String lemmaFileData) {
-        JSONObject bookObject = new JSONObject(bookFileData);
-        JSONObject lemmaObject = new JSONObject(lemmaFileData);
+    private RandomBibleVerseResponse getRandomVerse() {
         Map<String, String> verseText = new HashMap<>();
 
-        // Look up random chapter from the book
-        JSONArray chaptersArray = bookObject.getJSONArray("chapters");
-        JSONObject randomChapterObject = chaptersArray.getJSONObject(getRandomNumber(chaptersArray.length()) - 1);
+        // Get all book elements from CSB
+        NodeList csbBooks = csbDoc.getElementsByTagName("book");
+        int randomBookIndex = getRandomNumber(csbBooks.getLength()) - 1;
+        Element csbBook = (Element) csbBooks.item(randomBookIndex);
+        int bookNumber = Integer.parseInt(csbBook.getAttribute("number"));
+        String bookName = BOOK_NAMES.get(bookNumber - 1);
 
-        // Look up random verse from the chapter
-        JSONArray randomVerseArray = randomChapterObject.getJSONArray("verses");
-        JSONObject randomVerseObject = randomVerseArray.getJSONObject(getRandomNumber(randomVerseArray.length()) - 1);
-        verseText.put("KJV", randomVerseObject.getString("text"));
+        // Get random chapter
+        NodeList chapters = csbBook.getElementsByTagName("chapter");
+        int randomChapterIndex = getRandomNumber(chapters.getLength()) - 1;
+        Element chapter = (Element) chapters.item(randomChapterIndex);
+        String chapterNumber = chapter.getAttribute("number");
 
-        // Lookup lemma data
-        if (lemmaObject.has(bookData.getName())) {
-            verseText.put(
-                    "SBLGNT",
-                    lemmaObject
-                            .getJSONObject(bookData.getName())
-                            .getJSONObject(randomChapterObject.getString("chapter"))
-                            .getString(randomVerseObject.getString("verse")));
-        } else {
-            log.info("No data found for book: {}", bookData.getFileName());
+        // Get random verse
+        NodeList verses = chapter.getElementsByTagName("verse");
+        int randomVerseIndex = getRandomNumber(verses.getLength()) - 1;
+        Element verse = (Element) verses.item(randomVerseIndex);
+        String verseNumber = verse.getAttribute("number");
+        verseText.put("CSB", verse.getTextContent());
+
+        // Look up Greek text
+        NodeList greekBooks = greekDoc.getElementsByTagName("book");
+        for (int i = 0; i < greekBooks.getLength(); i++) {
+            Element greekBook = (Element) greekBooks.item(i);
+            if (greekBook.getAttribute("number").equals(String.valueOf(bookNumber))) {
+                NodeList greekChapters = greekBook.getElementsByTagName("chapter");
+                for (int j = 0; j < greekChapters.getLength(); j++) {
+                    Element greekChapter = (Element) greekChapters.item(j);
+                    if (greekChapter.getAttribute("number").equals(chapterNumber)) {
+                        NodeList greekVerses = greekChapter.getElementsByTagName("verse");
+                        for (int k = 0; k < greekVerses.getLength(); k++) {
+                            Element greekVerse = (Element) greekVerses.item(k);
+                            if (greekVerse.getAttribute("number").equals(verseNumber)) {
+                                verseText.put("Greek", greekVerse.getTextContent());
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+
+        if (!verseText.containsKey("Greek")) {
+            log.info("No Greek data found for {} {}:{}", bookName, chapterNumber, verseNumber);
         }
 
         return RandomBibleVerseResponse.builder()
-                .book(bookData.getName())
-                .chapter(randomChapterObject.getString("chapter"))
-                .verse(randomVerseObject.getString("verse"))
+                .book(bookName)
+                .chapter(chapterNumber)
+                .verse(verseNumber)
                 .text(verseText)
                 .build();
-    }
-
-    private BookData getRandomBook(String booksData) {
-        JSONObject booksObject = new JSONObject(booksData);
-        JSONArray bookNameArray = booksObject.getJSONArray("names");
-        JSONArray filesArray = booksObject.getJSONArray("files");
-        int randomIndex = getRandomNumber(filesArray.length());
-        log.info("Random index is: {}", randomIndex);
-        return new BookData(bookNameArray.getString(randomIndex - 1), filesArray.getString(randomIndex - 1));
     }
 
     private int getRandomNumber(int max) {

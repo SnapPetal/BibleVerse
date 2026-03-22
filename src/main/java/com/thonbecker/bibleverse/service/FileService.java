@@ -1,10 +1,6 @@
 package com.thonbecker.bibleverse.service;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
@@ -25,16 +21,5 @@ public class FileService {
                 .bucket("bible-verse-data-files")
                 .build();
         return this.s3Client.getObject(objectRequest);
-    }
-
-    public Optional<String> getFileAsString(InputStream is) throws IOException {
-        if (Objects.isNull(is)) {
-            return Optional.empty();
-        }
-        try (is) {
-            return Optional.of(new String(is.readAllBytes(), StandardCharsets.UTF_8));
-        } catch (IOException e) {
-            return Optional.empty();
-        }
     }
 }
