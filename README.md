@@ -1,6 +1,6 @@
 # BibleVerse API
 
-A RESTful API service that generates random Bible verses using Spring Boot and AWS Lambda. The service provides both KJV (King James Version) and SBLGNT (Greek New Testament) text for each verse.
+A RESTful API service that generates random Bible verses using Spring Boot and AWS Lambda. The service provides both CSB (Christian Standard Bible) and Greek text for each verse.
 
 ## Overview
 
@@ -9,7 +9,7 @@ BibleVerse is a cloud-native application that provides simple API endpoints to f
 ## Features
 
 - **Random Bible Verse Generation**: Returns random verses from the entire Bible
-- **Multiple Text Versions**: Provides both KJV and SBLGNT (Greek) text
+- **Multiple Text Versions**: Provides both CSB and Greek text
 - **RESTful API**: Clean HTTP endpoints with proper JSON responses
 - **Serverless Architecture**: AWS Lambda with API Gateway v2
 - **Cloud-Native**: S3 integration for data storage
@@ -18,10 +18,10 @@ BibleVerse is a cloud-native application that provides simple API endpoints to f
 
 ## Technology Stack
 
-- **Backend Framework**: Spring Boot 3.4.5
-- **Language**: Java 21
+- **Backend Framework**: Spring Boot 4.0.4
+- **Language**: Java 25
 - **Cloud Platform**: AWS
-  - Lambda (serverless compute)
+  - Lambda (serverless compute with SnapStart)
   - API Gateway v2 (HTTP API)
   - S3 (data storage)
   - Route 53 (DNS)
@@ -31,8 +31,6 @@ BibleVerse is a cloud-native application that provides simple API endpoints to f
   - Spring Cloud Function
   - AWS SDK for Java v2
   - Lombok
-  - Joda Time
-  - JSON.org
 
 ## API Endpoints
 
@@ -48,7 +46,7 @@ https://bibleverse.thonbecker.com
 
 **GET** `/`
 
-Returns a random Bible verse with both KJV and SBLGNT text.
+Returns a random Bible verse with both CSB and Greek text.
 
 **Response:**
 
@@ -58,8 +56,8 @@ Returns a random Bible verse with both KJV and SBLGNT text.
   "chapter": "3",
   "verse": "16",
   "text": {
-    "KJV": "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.",
-    "SBLGNT": "Οὕτως γὰρ ἠγάπησεν ὁ θεὸς τὸν κόσμον, ὥστε τὸν υἱὸν τὸν μονογενῆ ἔδωκεν, ἵνα πᾶς ὁ πιστεύων εἰς αὐτὸν μὴ ἀπόληται ἀλλ᾽ ἔχῃ ζωὴν αἰώνιον."
+    "CSB": "For God loved the world in this way: He gave his one and only Son, so that everyone who believes in him will not perish but have eternal life.",
+    "Greek": "Οὕτω γὰρ ἠγάπησεν ὁ Θεὸς τὸν κόσμον, ὥστε ἔδωκε τὸν Υἱὸν αὑτοῦ τὸν μονογενῆ, διὰ νὰ μή ἀπολεσθῇ πᾶς ὁ πιστεύων εἰς αὐτόν, ἀλλὰ νὰ ἔχῃ ζωὴν αἰώνιον."
   }
 }
 ```
@@ -93,9 +91,9 @@ All endpoints return:
 
 ### Prerequisites
 
-- **Java 21** or higher
-- **Maven 3.8** or higher
-- **Node.js 18** or higher (for CDK)
+- **Java 25** (Corretto)
+- **Maven 3.9** or higher
+- **Node.js 24** or higher (for CDK)
 - **AWS CLI** configured with appropriate permissions
 - **AWS CDK** installed globally: `npm install -g aws-cdk`
 
@@ -167,7 +165,6 @@ BibleVerse/
 │   │   └── RandomBibleVerseHandler.java
 │   ├── model/              # Data models
 │   │   ├── AboutResponse.java
-│   │   ├── BookData.java
 │   │   └── RandomBibleVerseResponse.java
 │   └── service/            # Business logic
 │       └── FileService.java
@@ -232,6 +229,15 @@ new HttpLambdaIntegration('Integration', function, {
 - **CORS Configuration**: Properly configured for web applications
 - **S3 Security**: Private bucket with IAM-based access control
 - **Lambda Security**: Minimal IAM permissions following least privilege principle
+
+## Bible Data Sources
+
+Bible text files are stored as XML in `.infrastructure/lib/data/files/` and deployed to S3.
+
+|          Translation           |       File        |                                                     Source                                                      |
+|--------------------------------|-------------------|-----------------------------------------------------------------------------------------------------------------|
+| CSB (Christian Standard Bible) | `csb/bible.xml`   | [Beblia/Holy-Bible-XML-Format](https://github.com/Beblia/Holy-Bible-XML-Format/blob/master/EnglishCSBBible.xml) |
+| Greek (Neophytos Vamvas 1770)  | `greek/bible.xml` | [Beblia/Holy-Bible-XML-Format](https://github.com/Beblia/Holy-Bible-XML-Format/blob/master/GreekBible.xml)      |
 
 ## License
 
