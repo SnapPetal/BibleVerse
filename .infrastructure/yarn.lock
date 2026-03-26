@@ -971,10 +971,10 @@ aws-cdk-lib@2.244.0:
     table "^6.9.0"
     yaml "1.10.2"
 
-aws-cdk@2.1112.0:
-  version "2.1112.0"
-  resolved "https://registry.yarnpkg.com/aws-cdk/-/aws-cdk-2.1112.0.tgz#d6093478750d696f394539d05d7dbdefb1e01ad7"
-  integrity sha512-IYUbsd9tpBQRqEO2evWsG+p2ZNa6wG5/sJvmWaqo45V1ep8BW+mrf+jEpFLD9uDPXqRA57EZGVGils7QLbOhNA==
+aws-cdk@2.1114.0:
+  version "2.1114.0"
+  resolved "https://registry.yarnpkg.com/aws-cdk/-/aws-cdk-2.1114.0.tgz#eb407ede85fabbb5629859a5c6db11ea06377841"
+  integrity sha512-qaEIVjlDb7nFb6pjZQezMaRgex7qixUU9WM1FYVlBs8Ishp5yzYkTVABGi6MNy2B0PN82gliI26vBYIdKslYUw==
 
 babel-jest@30.3.0:
   version "30.3.0"
