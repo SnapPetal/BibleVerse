@@ -22,10 +22,8 @@ public class FileService {
     }
 
     public InputStream getFile(String fileName) {
-        GetObjectRequest objectRequest = GetObjectRequest.builder()
-                .key(fileName)
-                .bucket(bucketName)
-                .build();
+        GetObjectRequest objectRequest =
+                GetObjectRequest.builder().key(fileName).bucket(bucketName).build();
         try {
             return this.s3Client.getObject(objectRequest);
         } catch (SdkException e) {
