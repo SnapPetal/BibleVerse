@@ -18,7 +18,7 @@ BibleVerse is a cloud-native application that provides simple API endpoints to f
 
 ## Technology Stack
 
-- **Backend Framework**: Spring Boot 4.0.4
+- **Backend Framework**: Spring Boot 4.0.6
 - **Language**: Java 25
 - **Cloud Platform**: AWS
   - Lambda (serverless compute with SnapStart)
@@ -159,7 +159,12 @@ The CDK stack creates:
 The project uses several tools to maintain code quality:
 - **Spotless**: Code formatting with Palantir Java style
 - **SortPOM**: Maven POM file organization
+- **Maven Enforcer**: Blocks AWS SDK for Java v1 service artifacts
 - **Lombok**: Reduces boilerplate code
+
+### CI/CD
+
+GitHub Actions deploys on pushes to `main`. AWS authentication uses GitHub OIDC and the `AWS_ROLE_TO_ASSUME` repository secret, which points to the deploy role ARN.
 
 ### Project Structure
 

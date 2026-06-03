@@ -17,7 +17,7 @@ public class FileService {
         this.bucketName = properties.bucketName();
         this.s3Client = S3Client.builder()
                 .region(Region.of(properties.region()))
-                .credentialsProvider(DefaultCredentialsProvider.create())
+                .credentialsProvider(DefaultCredentialsProvider.builder().build())
                 .build();
     }
 

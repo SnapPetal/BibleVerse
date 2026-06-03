@@ -20,7 +20,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Toolchain
 
-Managed via `mise.toml`: Java Corretto 25, Maven 3.9.14, Node.js 24.11.1.
+Managed via `mise.toml`: Java Corretto 25, Maven 3.9, Node.js 24.
 
 ## Architecture
 
@@ -38,8 +38,10 @@ Serverless REST API returning random Bible verses in CSB (English) and Greek tra
 
 ## CI/CD
 
-GitHub Actions (`.github/workflows/aws-deploy.yml`): push to `main` → `mvn clean verify` → `cdk deploy`. AWS credentials from GitHub secrets.
+GitHub Actions (`.github/workflows/aws-deploy.yml`): push to `main` → `mvn clean verify` → `cdk deploy`. AWS auth uses GitHub OIDC and the `AWS_ROLE_TO_ASSUME` repository secret.
 
 ## Code Formatting
 
 Spotless runs automatically during `mvn verify`. Run `mvn spotless:apply` before committing to avoid failures. Enforces Palantir Java format, POM sorting (by scope then groupId), and Prettier for JS.
+
+Maven Enforcer bans `com.amazonaws:aws-java-sdk*` artifacts so AWS service clients stay on AWS SDK for Java v2.
