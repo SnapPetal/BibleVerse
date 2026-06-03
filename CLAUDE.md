@@ -20,7 +20,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Toolchain
 
-Managed via `.tool-versions` (asdf): Java Corretto 25, Maven 3.9.14, Node.js 24.
+Managed via `mise.toml`: Java Corretto 25, Maven 3.9.14, Node.js 24.11.1.
 
 ## Architecture
 

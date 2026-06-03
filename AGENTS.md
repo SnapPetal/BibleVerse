@@ -20,7 +20,7 @@ This file provides guidance to coding agents working with code in this repositor
 
 ### Toolchain
 
-Managed via `.tool-versions` (asdf): Java Corretto 25, Maven 3.9.14, Node.js 24.
+Managed via `mise.toml`: Java Corretto 25, Maven 3.9.14, Node.js 24.11.1.
 
 ## Architecture
 

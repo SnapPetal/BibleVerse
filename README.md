@@ -91,6 +91,7 @@ All endpoints return:
 
 ### Prerequisites
 
+- **mise** for local toolchain management
 - **Java 25** (Corretto)
 - **Maven 3.9** or higher
 - **Node.js 24** or higher (for CDK)
@@ -110,12 +111,17 @@ All endpoints return:
    ```bash
    aws configure
    ```
-3. **Build the application**
+3. **Install local tools**
+
+   ```bash
+   mise install
+   ```
+4. **Build the application**
 
    ```bash
    mvn clean package
    ```
-4. **Synthesize CDK template**
+5. **Synthesize CDK template**
 
    ```bash
    cd .infrastructure
