@@ -26,7 +26,7 @@ jobs:
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
-          role-to-assume: arn:aws:iam::664759038511:role/GitHubActionsBibleVerseDeploy
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: 'us-east-1'
       - name: Deploy cdk
         working-directory: .infrastructure
