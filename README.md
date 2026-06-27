@@ -18,7 +18,7 @@ BibleVerse is a cloud-native application that provides simple API endpoints to f
 
 ## Technology Stack
 
-- **Backend Framework**: Spring Boot 4.0.6
+- **Backend Framework**: Spring Boot 4.1.0
 - **Language**: Java 25
 - **Cloud Platform**: AWS
   - Lambda (serverless compute with SnapStart)

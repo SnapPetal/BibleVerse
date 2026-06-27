@@ -20,7 +20,7 @@ import org.w3c.dom.NodeList;
 @Component
 @Slf4j
 public class RandomBibleVerseHandler implements Supplier<RandomBibleVerseResponse> {
-    private final List<Book> books;
+    private final List<IndexedVerse> verses;
 
     private static final List<String> BOOK_NAMES = List.of(
             "Genesis",
@@ -94,7 +94,7 @@ public class RandomBibleVerseHandler implements Supplier<RandomBibleVerseRespons
         try {
             Document csbDoc = parseXml(fileService.getFile("csb/bible.xml"));
             Document greekDoc = parseXml(fileService.getFile("greek/bible.xml"));
-            this.books = indexBibles(csbDoc, greekDoc);
+            this.verses = indexBibles(csbDoc, greekDoc);
         } catch (Exception e) {
             throw new RuntimeException("Failed to load Bible XML data", e);
         }
@@ -102,21 +102,18 @@ public class RandomBibleVerseHandler implements Supplier<RandomBibleVerseRespons
 
     @Override
     public RandomBibleVerseResponse get() {
-        Book book = books.get(ThreadLocalRandom.current().nextInt(books.size()));
-        Chapter chapter = book.chapters.get(ThreadLocalRandom.current().nextInt(book.chapters.size()));
-        Verse verse = chapter.verses.get(ThreadLocalRandom.current().nextInt(chapter.verses.size()));
-
-        Map<String, String> verseText = new HashMap<>();
-        verseText.put("CSB", verse.csb);
+        IndexedVerse verse = verses.get(ThreadLocalRandom.current().nextInt(verses.size()));
+        Map<String, String> verseText;
         if (verse.greek != null) {
-            verseText.put("Greek", verse.greek);
+            verseText = Map.of("CSB", verse.csb, "Greek", verse.greek);
         } else {
-            log.info("No Greek data found for {} {}:{}", book.name, chapter.number, verse.number);
+            verseText = Map.of("CSB", verse.csb);
+            log.info("No Greek data found for {} {}:{}", verse.book, verse.chapter, verse.number);
         }
 
         return RandomBibleVerseResponse.builder()
-                .book(book.name)
-                .chapter(chapter.number)
+                .book(verse.book)
+                .chapter(verse.chapter)
                 .verse(verse.number)
                 .text(verseText)
                 .build();
@@ -137,7 +134,7 @@ public class RandomBibleVerseHandler implements Supplier<RandomBibleVerseRespons
         }
     }
 
-    private List<Book> indexBibles(Document csbDoc, Document greekDoc) {
+    private List<IndexedVerse> indexBibles(Document csbDoc, Document greekDoc) {
         // Index Greek text by book/chapter/verse number for O(1) lookup
         Map<String, Map<String, Map<String, String>>> greekIndex = new HashMap<>();
         NodeList greekBooks = greekDoc.getElementsByTagName("book");
@@ -160,8 +157,7 @@ public class RandomBibleVerseHandler implements Supplier<RandomBibleVerseRespons
             }
         }
 
-        // Build indexed book list from CSB, merging Greek text
-        List<Book> result = new ArrayList<>();
+        List<IndexedVerse> result = new ArrayList<>();
         NodeList csbBooks = csbDoc.getElementsByTagName("book");
         for (int i = 0; i < csbBooks.getLength(); i++) {
             Element csbBook = (Element) csbBooks.item(i);
@@ -169,31 +165,23 @@ public class RandomBibleVerseHandler implements Supplier<RandomBibleVerseRespons
             String bookName = BOOK_NAMES.get(Integer.parseInt(bookNum) - 1);
             Map<String, Map<String, String>> greekChapters = greekIndex.get(bookNum);
 
-            List<Chapter> chapters = new ArrayList<>();
             NodeList csbChapters = csbBook.getElementsByTagName("chapter");
             for (int j = 0; j < csbChapters.getLength(); j++) {
                 Element csbChapter = (Element) csbChapters.item(j);
                 String chapterNum = csbChapter.getAttribute("number");
                 Map<String, String> greekVerses = greekChapters != null ? greekChapters.get(chapterNum) : null;
 
-                List<Verse> verses = new ArrayList<>();
                 NodeList csbVerses = csbChapter.getElementsByTagName("verse");
                 for (int k = 0; k < csbVerses.getLength(); k++) {
                     Element csbVerse = (Element) csbVerses.item(k);
                     String verseNum = csbVerse.getAttribute("number");
                     String greekText = greekVerses != null ? greekVerses.get(verseNum) : null;
-                    verses.add(new Verse(verseNum, csbVerse.getTextContent(), greekText));
+                    result.add(new IndexedVerse(bookName, chapterNum, verseNum, csbVerse.getTextContent(), greekText));
                 }
-                chapters.add(new Chapter(chapterNum, List.copyOf(verses)));
             }
-            result.add(new Book(bookName, List.copyOf(chapters)));
         }
         return List.copyOf(result);
     }
 
-    private record Verse(String number, String csb, String greek) {}
-
-    private record Chapter(String number, List<Verse> verses) {}
-
-    private record Book(String name, List<Chapter> chapters) {}
+    private record IndexedVerse(String book, String chapter, String number, String csb, String greek) {}
 }
